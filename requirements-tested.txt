@@ -1,0 +1,14 @@
+# Observed environment constraints on 2026-09-17, not a historical lockfile.
+-r requirements.txt
+contourpy==1.3.0
+cycler==0.12.1
+fonttools==4.60.2
+kiwisolver==1.4.7
+packaging==26.3
+pyparsing==2.4.7
+python-dateutil==2.9.0.post0
+pytz==2026.3.post1
+tzdata==2026.3
+six==1.15.0
+importlib_resources==6.5.2
+zipp==3.23.1
