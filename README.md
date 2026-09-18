@@ -31,6 +31,7 @@ not evidence of clinical diagnoses, causal effects or alcohol-volume categories.
 
 | Component | Source / output role |
 | --- | --- |
+| Table 1 descriptive characteristics | `run_table1_descriptive.py`; new implementation of documented row definitions, column-total percentages and sample SDs, not a recovered historical script |
 | Primary M1, Steps-by-sex, pooled PCA and M2 | `run_primary_and_moderated_notebook_source.py`, primary stage: exported current notebook source cells and prerequisite input producers |
 | Formal pooled pathway interactions and conditional sex/age contrasts | Same wrapper, pathways/moderation stages; not interchangeable with separately fitted sex models |
 | Pooled decomposition, score-construction robustness, case-only consistency, Steps spline, Figure 2 | `run_robustness_and_figure2.py` |
@@ -47,9 +48,11 @@ implementation of the pooled bootstrap; the wrapper does not substitute an
 older pooled bootstrap cell. Downstream source coverage does not establish
 independent validation of upstream measurement dates or selection rules.
 Figure 1/S1 Fig are manuscript diagrams; S9 is phenotype documentation rather
-than a computed statistical table. A complete Table 1 descriptive-table
-generator has not been recovered in this package; do not claim that every
-manuscript asset is generated automatically.
+than a computed statistical table. The new Table 1 generator was tested on
+manufactured inputs, not rerun against the historical cohort during packaging.
+It rejects missing required classified-cohort fields rather than recoding them
+as absence. Do not claim that every manuscript asset is generated automatically
+or that synthetic tests independently reproduce the reported Table 1 values.
 
 ## Checks without study data
 

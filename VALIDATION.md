@@ -1,9 +1,10 @@
-# Local candidate checks — 2026-09-17
+# Source-package checks — 2026-09-17
 
 The following checks were run on this source-only package using Python 3.9.25
 and the installed scientific dependencies documented in ENVIRONMENT.md:
 
-- `python -B -m unittest discover -v -p 'test_*.py'`: **35 tests passed**.
+- `python -B -m unittest discover -v -p 'test_*.py'`: **44 tests passed**,
+  including nine tests for the newly implemented Table 1 generator.
 - `python -B run_primary_and_moderated_notebook_source.py --verify-sources`:
   all seven embedded source-cell hashes and Python syntax passed.
 - The nine copied existing standalone source/test files were byte-identical
@@ -16,7 +17,10 @@ Tests cover synthetic M1/PCA/M2/pathway execution, input compatibility with
 separate-sex and unclassified-setting branches, the age-reference adapter,
 linear-reference agreement, spline rank/parameter counts, pooled decomposition
 identities, score scaling, deterministic synthetic resamples and provenance
-guard failures. Synthetic runtime files are created in temporary directories;
+guard failures. Table 1 checks cover sample SDs, derived scores, full-column
+denominators, unclassified-setting exclusion, missing/invalid input rejection,
+aggregate-only output, LaTeX rendering and non-overwriting output boundaries.
+Synthetic runtime files are created in temporary directories;
 they do not originate from participant data.
 
 Not performed: a full study-data rerun, independent upstream cohort/measurement

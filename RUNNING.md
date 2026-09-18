@@ -14,6 +14,25 @@ manufactured cohorts by tests and do not enforce the manuscript's exact counts.
 
 ## 1. Primary models and prerequisite exports
 
+Table 1 can be generated independently from the same prepared cohort, without
+fitting models. Run this new generator from the code directory in the authorised
+Workbench and use a separate, non-existent output directory:
+
+```bash
+python -B run_table1_descriptive.py --prepared-cohort /authorized/input/final_analytic_cohort_with_habits.csv --output-dir /authorized/new_table1_run
+```
+
+It writes a numeric aggregate CSV, a LaTeX table, and aggregate generation
+metadata. The CLI checks classified counts against 5,780/2,127/385; unclassified
+CVD settings are excluded. Every displayed variable must be complete in the
+classified sample: missing values fail rather than becoming zero or silently
+changing denominators. Binary percentages use the full outcome-column total;
+continuous summaries use sample SD (`ddof=1`). This newly written script follows
+the current documented Table 1 definitions and has synthetic tests only; an
+authorised run must check agreement with historical values before replacing
+the manuscript table. It does not reconstruct upstream selection or source
+measurements. Keep outputs in the Workbench until disclosure review.
+
 For example, from the code directory inside an authorised Workbench environment
 (replace these illustrative paths with your approved locations):
 

@@ -10,7 +10,7 @@ compatibility and are not clinical diagnoses unless explicitly stated.
 ## Study timeline and eligibility
 
 - Baseline `t0`: investigator-confirmed range 2018-02-01 to 2020-10-01.
-- Steps exposure: `[t0 - 12 months, t0)`; more than 12 months of prior Fitbit
+- Steps exposure: `[t0 - 12 months, t0)`; at least 12 months of prior Fitbit
   observation and at least 9 valid calendar months in the exposure window.
 - A valid Steps month contains at least 21 valid days. A valid day has at least
   100 steps and at least 600 distinct minutes of heart-rate records.

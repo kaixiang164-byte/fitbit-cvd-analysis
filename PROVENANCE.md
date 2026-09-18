@@ -42,14 +42,20 @@ dictionary and manuscript define the current measurement/interpretation terms.
   determinism tests.
 - `test_notebook_wrapper_synthetic.py`: source-wrapper/adapter tests using
   generated data only.
+- `run_table1_descriptive.py` and `test_table1_descriptive.py`: newly written
+  descriptive-table generator and synthetic checks following the reported
+  Table 1 definitions. These are not recovered historical extraction or
+  table-generation code; study-data agreement has not been checked during
+  packaging.
 - Release README, variable dictionary, environment specification, execution
   instructions, manifest and inventory validator.
 
 Test results document the tested functions and I/O boundaries, not independent
 recovery of the original cohort. In particular, the upstream eligibility and
 source-field definitions are prerequisites, not reconstructed by these scripts.
-The source-only package also does not automatically generate every manuscript
-layout or the full Table 1 descriptive summary.
+The source-only package does not automatically generate every manuscript
+layout. The new Table 1 generator requires the documented prepared cohort and
+does not establish that historical source records met upstream eligibility.
 
 ## Confidentiality
 
