@@ -6,6 +6,11 @@ indirect associations in the All of Us Research Program.
 
 **Repository:** https://github.com/kaixiang164-byte/fitbit-cvd-analysis
 
+**Source update (2026-09-24):** this version includes the missing-setting
+allocation analysis, its synthetic tests and the S14/S2 renderer. These were
+added after the earlier release `9e03508`; cite the current Git commit rather
+than that earlier version when using these additions.
+
 This source-only package documents the downstream analysis. Use the Git commit
 identifier to identify a version; no archival DOI has been assigned. An open
 source licence has not yet been selected, so no MIT or other licence is implied.
@@ -37,6 +42,8 @@ not evidence of clinical diagnoses, causal effects or alcohol-volume categories.
 | Pooled decomposition, score-construction robustness, case-only consistency, Steps spline, Figure 2 | `run_robustness_and_figure2.py` |
 | Separate female/male mediation fits (S2) | `run_sex_stratified_mediation.py` |
 | Unclassified-setting sensitivity (S7) | `run_unclassified_setting_sensitivity.py` |
+| Hypothetical allocation of missing settings (S14/S2 Fig) | `run_setting_reassignment_sensitivity.py`; 455 missing-setting cases allocated under fixed scenarios, with 148 Other/Unknown cases excluded |
+| S14/S2 Fig typesetting | `build_setting_reassignment_si.py`; reads reviewed aggregate outputs and consistently reports scenario-conditional sampling CIs |
 | Nonlinear age-adjustment sensitivity (S8) | `run_age_adjustment_sensitivity.py` |
 | Compatibility export for the age script | `prepare_age_reference.py`; filename/model-label adapter only, no model fitting |
 | Sleep-omission sensitivity (S10) | `run_sleep_omission_sensitivity.py` |
@@ -66,6 +73,12 @@ Python syntax and selected disclosure hazards; it is not proof of scientific
 validity or exhaustive privacy review. None of these checks reruns study data.
 The source-only provenance manifest distinguishes unmodified standalone scripts
 from the new notebook-source packaging wrapper and release documentation.
+The new allocation tests check synthetic calibration, fractional multinomial
+estimation and bootstrap behaviour; they do not independently reconstruct the
+study cohort or establish the true settings of unclassified cases. The
+analysis script also writes optional random-assignment scenario intervals for
+diagnostic review. Those are not confidence intervals for the fractional point
+estimate; the manuscript S14/S2 renderer uses only the conditional sampling CIs.
 
 ## Release safety
 

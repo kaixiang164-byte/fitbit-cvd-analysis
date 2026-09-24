@@ -1,4 +1,32 @@
-# Source-package checks — 2026-09-17
+# Source-package checks
+
+## Source-update checks — 2026-09-24
+
+- `python -B -m unittest -v test_setting_reassignment_sensitivity`:
+  **13 new synthetic tests passed**. Coverage includes weighted and unweighted
+  probability calibration, endpoint scenarios, invalid-input rejection,
+  multinomial parameters/full covariance versus statsmodels, rational
+  fractional counts versus repeated rows, bootstrap multiplicity equivalence,
+  warm starts, finite-difference derivatives and extreme-logit stability.
+- `python -B -m unittest discover -v -p 'test_*.py'`: **57 tests passed**,
+  including the existing 44 and the new 13.
+- `--help` for the allocation analysis and S14/S2 renderer imported correctly
+  using the existing pinned scientific dependencies and local helper module.
+- The three newly included source/test files and the existing unclassified-
+  setting helper matched their reviewed working sources byte-for-byte.
+- The seven notebook-source hashes still passed `--verify-sources`.
+- `python -B validate_release.py`: the refreshed manifest inventory, hashes,
+  Python syntax and limited disclosure scan passed for the local source set.
+
+These checks ran on manufactured inputs only; no participant dataset or
+aggregate study output was copied into or analysed from this package. The
+new files postdate the earlier release `9e03508`; their hashes are included
+in this version's manifest. These tests are not independent
+reproduction of the reported cohort/results. The renderer was import/syntax
+checked here; manuscript asset rendering is separate from these source-only
+package checks.
+
+## Original package checks — 2026-09-17
 
 The following checks were run on this source-only package using Python 3.9.25
 and the installed scientific dependencies documented in ENVIRONMENT.md:

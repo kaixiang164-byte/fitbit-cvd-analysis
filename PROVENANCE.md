@@ -5,6 +5,28 @@ Repository: https://github.com/kaixiang164-byte/fitbit-cvd-analysis.
 This is a code-only downstream analysis package, not a new study-data analysis.
 Its Git commit identifies the uploaded version; no archival DOI is assigned.
 
+## Source update — 2026-09-24
+
+Three reviewed working sources were copied byte-for-byte into this package:
+`run_setting_reassignment_sensitivity.py`,
+`test_setting_reassignment_sensitivity.py`, and
+`build_setting_reassignment_si.py`. They add the post-hoc missing-setting
+allocation sensitivity and source-only S14/S2 rendering. These additions
+postdate the earlier release `9e03508`; the repository commit identifies the
+version containing them. The manifest records their source hashes and the
+earlier release separately.
+
+The new analysis imports the existing unclassified-setting helper module,
+which matches the working helper byte-for-byte. Its scientific dependencies
+are already pinned in `requirements.txt`; no new dependency was introduced.
+Its tests use manufactured arrays only. Copying and validating this package
+did not rerun study data; the separate working analysis produced the aggregate
+results used for manuscript preparation. No participant input, result CSV,
+bootstrap draw, figure, metadata export or notebook was copied into this
+source-only package. The renderer reads aggregate estimates at runtime,
+requires the documented 2,000-bootstrap configuration, and uses conditional
+sampling CIs rather than the optional random-assignment scenario intervals.
+
 ## Preserved standalone sources
 
 The six existing analysis/rendering scripts and three existing test modules

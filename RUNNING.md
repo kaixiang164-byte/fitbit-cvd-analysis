@@ -126,6 +126,44 @@ script verifies reproduction of both linear-age reference fits before comparing
 age specifications. The four-category model tests a changed outcome model, not
 all possible acute/outpatient assignments of missing settings.
 
+### 5a. Missing-setting allocation scenarios
+
+This addition postdates the earlier release `9e03508`. It is distinct from the S7
+four-category model. It adds the 455 missing-setting cases to the original
+8,292 classified-cohort participants under hypothetical acute/outpatient
+probabilities, excludes the 148 combined Other/Unknown cases, and does not
+refit PCA or mediation. The original prepared 8,895-person cohort, M1 scaling
+and `m1_primary_pairwise_results_python.csv` are required. The existing
+`run_unclassified_setting_sensitivity.py` module supplies the compatible
+input/design/reference helpers and must remain beside the new analysis script.
+
+Run from the source directory, using private inputs and a new output directory
+in the authorised Workbench (not this public-release checkout):
+
+```bash
+OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 MKL_NUM_THREADS=1 python -B run_setting_reassignment_sensitivity.py --data-dir /authorized/new_analysis_run --output-dir /authorized/new_analysis_run/setting_reassignment_sensitivity --bootstrap 2000 --workers 4 --seed 20260924
+python -B build_setting_reassignment_si.py --directory /authorized/new_analysis_run
+```
+
+The renderer expects the sensitivity CSV and metadata within the named
+`setting_reassignment_sensitivity` child directory. It writes S14 Table and
+S2 Figure LaTeX source plus the figure PDF/PNG into the parent working
+directory; a LaTeX installation is needed separately to compile the table and
+captioned-figure documents. It does not rerun models or read participant data.
+These commands can replace existing output files: always start with a new
+working/output location. The renderer requires all 2,000 bootstrap replicates
+and the documented cohort counts; a small smoke run cannot generate the final
+manuscript assets.
+
+The main point estimator maximises a fractional multinomial log-likelihood.
+`sampling_lower/upper` are percentile CIs conditional on each fixed allocation
+scenario. `scenario_lower/upper` additionally include randomly completed labels
+and are not calibrated CIs for that point estimator or the unknown true
+association. The analysis script's diagnostic heatmap displays these latter
+scenario intervals; the manuscript `build_setting_reassignment_si.py` renderer
+uses only `sampling_lower/upper`. Neither output estimates the true missing
+settings or uncertainty over which allocation assumptions are correct.
+
 ## Generated output review
 
 Keep participant-level PCA intermediates inside the Workbench. Generated logs,

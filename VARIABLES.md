@@ -51,9 +51,12 @@ compatibility and are not clinical diagnoses unless explicitly stated.
 | `has_ckd` | Chronic kidney disease recorded during that window, 0/1. |
 
 Clinical flags describe records in the window, not necessarily incident disease.
-An absent record is not proof of disease absence. Smoking/drinking definitions
-and timing were confirmed by the investigator; original question-to-code
-mappings are not independently validated by these downstream scripts.
+An absent record is not proof of disease absence. The investigator confirmed that
+smoking/drinking source values were numeric frequencies in occasions/month,
+categorised directly at the thresholds above without converting frequency ranges.
+These categories do not capture consumption quantity. Definitions and timing
+were confirmed by the investigator; the original source-field identifiers and
+historical extraction are not independently validated by these downstream scripts.
 
 ### Sleep and survey measurement
 
@@ -74,13 +77,24 @@ consumed by this package.
 
 ### Outcome semantics
 
-Qualifying records were restricted upstream to principal CVD diagnoses using
-`condition_type_concept_id`, then the earliest qualifying record determined
-date/setting. Principal-status numeric mappings are not inferred by this code.
-Upstream participant exclusions include prior CVD, unknown diagnosis position,
-secondary-only CVD, and secondary CVD preceding a later principal CVD record.
-Those upstream exclusion counts are not recoverable from the prepared table.
-Controls have no recorded CVD of any diagnosis position through the endpoint.
+Upstream CVD screening used `condition_status_concept_id IN (32902, 32908)`:
+32902 denotes Primary diagnosis and 32908 denotes Secondary diagnosis. Both
+statuses were used for prior-CVD and pre-landmark screening and to determine
+control eligibility. Among eligible cases, only primary CVD records (32902)
+qualified for the final outcome, with the earliest such record determining
+date/setting. The investigator confirmed these rules on 23 September 2026,
+correcting the earlier `condition_type_concept_id` description. The same status
+rules applied across encounter settings. This downstream package consumes the
+prepared outcome labels; it does not execute or independently validate the
+upstream extraction, and the full extraction SQL remains unavailable.
+Upstream participant exclusions include prior CVD, missing or unknown diagnosis
+position, and secondary-only CVD. For participants with both types of CVD
+record, the entire participant was excluded if the earliest secondary record
+preceded the earliest primary record; a later primary record did not restore
+eligibility. Those upstream exclusion counts and their ordering or overlap
+with other eligibility exclusions are not recoverable from the prepared table.
+Controls had neither a primary nor a secondary CVD record through the endpoint,
+subject to the study's prior-CVD and pre-landmark eligibility requirements.
 The 603 exported unclassified-setting cases are distinct from diagnosis-position
 exclusions. The package does not reclassify secondary diagnoses as controls.
 
