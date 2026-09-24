@@ -86,7 +86,7 @@ date/setting. The investigator confirmed these rules on 23 September 2026,
 correcting the earlier `condition_type_concept_id` description. The same status
 rules applied across encounter settings. This downstream package consumes the
 prepared outcome labels; it does not execute or independently validate the
-upstream extraction, and the full extraction SQL remains unavailable.
+upstream extraction.
 Upstream participant exclusions include prior CVD, missing or unknown diagnosis
 position, and secondary-only CVD. For participants with both types of CVD
 record, the entire participant was excluded if the earliest secondary record
