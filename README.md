@@ -7,7 +7,7 @@ indirect associations in the All of Us Research Program.
 **Repository:** https://github.com/kaixiang164-byte/fitbit-cvd-analysis
 
 **Source update (2026-09-24):** this version includes the missing-setting
-allocation analysis, its synthetic tests and the S14/S2 renderer. These were
+allocation analysis, its synthetic tests and the S14/main Fig 3 renderer. These were
 added after the earlier release `9e03508`; cite the current Git commit rather
 than that earlier version when using these additions.
 
@@ -79,7 +79,7 @@ estimation and bootstrap behaviour; they do not independently reconstruct the
 study cohort or establish the true settings of unclassified cases. The
 analysis script also writes optional random-assignment scenario intervals for
 diagnostic review. Those are not confidence intervals for the fractional point
-estimate; the manuscript S14/S2 renderer uses only the conditional sampling CIs.
+estimate; the manuscript S14/main Fig 3 renderer uses only the conditional sampling CIs.
 
 ## Release safety
 
