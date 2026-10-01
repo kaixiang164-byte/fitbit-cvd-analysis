@@ -835,7 +835,7 @@ def create_figure(data, curves, spline_test, mediation_summary):
         )
 
     ax.set_title(
-        "A. Standardised outcome probabilities",
+        "A. Fitted M1 probabilities",
         loc="left",
         fontweight="bold",
     )
@@ -1050,7 +1050,10 @@ def validate_canonical_code(manifest):
             return {}
         if (revision.get("source_run_code_sha256") == run_hash
                 and revision.get("revised_code_sha256") == current_hash
-                and revision.get("scope") == "figure2-exposure-label-reporting-only"
+                and revision.get("scope") in {
+                    "figure2-exposure-label-reporting-only",
+                    "figure2-m1-label-reporting-only",
+                }
                 and revision.get("mediation_refitted") is False
                 and revision.get("fitted_results_unchanged") is True):
             # This reporting edit builds on the reviewed diagnostic correction;

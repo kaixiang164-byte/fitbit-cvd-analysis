@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Build S14 Table and S2 Fig. from saved aggregate sensitivity estimates.
+"""Build S14 Table and main Fig 3 from saved aggregate sensitivity estimates.
 
 This script typesets existing results only. It never loads participant data,
 reruns models, or uses the additional random-assignment scenario intervals.
@@ -24,7 +24,7 @@ import numpy as np
 
 
 CONTRASTS = ("Outpatient vs control", "Acute vs control", "Acute vs outpatient")
-PLOT_STEM = "figure_s2_setting_reassignment_plot"
+PLOT_STEM = "figure3_setting_reassignment_plot"
 REFERENCE_Q = 385 / 2512
 
 
@@ -233,8 +233,10 @@ def make_figure(scenarios, directory):
              fontsize=11.5, color="#152536")
     fig.text(.155, .027, "Cells: fitted Steps OR (scenario-conditional bootstrap 95% CI); N = 8,747.",
              fontsize=10.5, color="#435063")
-    fig.savefig(directory / f"{PLOT_STEM}.pdf", metadata={"Title": "S2 Figure: Missing-setting allocation sensitivity"})
+    fig.savefig(directory / f"{PLOT_STEM}.pdf", metadata={"Title": "Fig 3: Missing-setting allocation sensitivity"})
     fig.savefig(directory / f"{PLOT_STEM}.png", dpi=200)
+    fig.savefig(directory / "Fig3.tif", dpi=600,
+                pil_kwargs={"compression": "tiff_lzw"})
     plt.close(fig)
 
 
@@ -247,10 +249,10 @@ def figure_source():
 \setlength{\parindent}{0pt}
 \begin{document}
 \begin{center}
-\includegraphics[width=\linewidth]{figure_s2_setting_reassignment_plot.pdf}
+\includegraphics[width=\linewidth]{figure3_setting_reassignment_plot.pdf}
 \end{center}
 {\small
-\textbf{S2 Fig. Sensitivity of the Steps association with CVD recording setting
+\textbf{Fig 3. Sensitivity of the Steps association with CVD recording setting
 to hypothetical allocation of missing settings.}
 Cells report the acute-care-versus-outpatient Steps OR per 1 original pooled SD
 (3298.82 steps/day), with scenario-conditional 95\% CIs from 2000 participant
@@ -281,8 +283,8 @@ def main():
     scenarios, metadata = load_results(directory)
     (directory / "S14_Table.tex").write_text(table_source(scenarios))
     make_figure(scenarios, directory)
-    (directory / "S2_Figure_setting_reassignment.tex").write_text(figure_source())
-    print(f"Built S14 Table and S2 Fig. from {len(scenarios)} scenarios; "
+    (directory / "Fig3_setting_reassignment.tex").write_text(figure_source())
+    print(f"Built S14 Table and main Fig 3 from {len(scenarios)} scenarios; "
           f'{metadata["bootstrap_successful"]} bootstrap samples; no models rerun.')
 
 

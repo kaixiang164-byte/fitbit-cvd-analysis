@@ -60,6 +60,24 @@ analysis directory containing their copied scripts and private input files.
 cd /authorized/new_analysis_run
 ```
 
+### 1a. Unadjusted and adjusted Steps comparison (S15)
+
+This reporting supplement fits a Steps-only multinomial model and reproduces
+the adjusted M1 Steps estimates in the identical classified sample. It retains
+the original pooled Steps scale and uses the full cross-logit covariance for
+acute-care versus outpatient. It does not refit mediation or alter the cohort.
+Use explicit private inputs and output locations outside the code checkout:
+
+```bash
+python -B run_crude_adjusted_steps_comparison.py --data /authorized/input/final_analytic_cohort_with_habits.csv --scales /authorized/new_analysis_run/m1_standardization_parameters.csv --reference /authorized/new_analysis_run/m1_primary_pairwise_results_python.csv --output-dir /authorized/new_analysis_run/crude_adjusted_steps_outputs --table /authorized/new_analysis_run/S15_Table.tex
+```
+
+Outputs are aggregate estimates, final-analysis-field missingness counts,
+reproduction diagnostics and S15 LaTeX. Re-running the command can replace these
+outputs; use a new working/output location and review outputs before sharing.
+Differences between unadjusted and adjusted ORs are not percentages of
+confounding removed. Synthetic tests use no participant data.
+
 ## 2. Pooled decomposition, score sensitivity, case-only model and Figure 2
 
 ```bash
@@ -147,7 +165,7 @@ python -B build_setting_reassignment_si.py --directory /authorized/new_analysis_
 
 The renderer expects the sensitivity CSV and metadata within the named
 `setting_reassignment_sensitivity` child directory. It writes S14 Table and
-S2 Figure LaTeX source plus the figure PDF/PNG into the parent working
+main Figure 3 LaTeX source plus the figure PDF/PNG/TIFF into the parent working
 directory; a LaTeX installation is needed separately to compile the table and
 captioned-figure documents. It does not rerun models or read participant data.
 These commands can replace existing output files: always start with a new

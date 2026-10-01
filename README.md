@@ -38,12 +38,13 @@ not evidence of clinical diagnoses, causal effects or alcohol-volume categories.
 | --- | --- |
 | Table 1 descriptive characteristics | `run_table1_descriptive.py`; new implementation of documented row definitions, column-total percentages and sample SDs, not a recovered historical script |
 | Primary M1, Steps-by-sex, pooled PCA and M2 | `run_primary_and_moderated_notebook_source.py`, primary stage: exported current notebook source cells and prerequisite input producers |
+| Unadjusted and adjusted Steps comparison (S15) | `run_crude_adjusted_steps_comparison.py`; identical classified sample and original Steps scale, full multinomial covariance, with reproduction of the saved M1 Steps estimates |
 | Formal pooled pathway interactions and conditional sex/age contrasts | Same wrapper, pathways/moderation stages; not interchangeable with separately fitted sex models |
 | Pooled decomposition, score-construction robustness, case-only consistency, Steps spline, Figure 2 | `run_robustness_and_figure2.py` |
 | Separate female/male mediation fits (S2) | `run_sex_stratified_mediation.py` |
 | Unclassified-setting sensitivity (S7) | `run_unclassified_setting_sensitivity.py` |
-| Hypothetical allocation of missing settings (S14/S2 Fig) | `run_setting_reassignment_sensitivity.py`; 455 missing-setting cases allocated under fixed scenarios, with 148 Other/Unknown cases excluded |
-| S14/S2 Fig typesetting | `build_setting_reassignment_si.py`; reads reviewed aggregate outputs and consistently reports scenario-conditional sampling CIs |
+| Hypothetical allocation of missing settings (S14/main Fig 3) | `run_setting_reassignment_sensitivity.py`; 455 missing-setting cases allocated under fixed scenarios, with 148 Other/Unknown cases excluded |
+| S14/main Fig 3 typesetting | `build_setting_reassignment_si.py`; reads reviewed aggregate outputs and consistently reports scenario-conditional sampling CIs |
 | Nonlinear age-adjustment sensitivity (S8) | `run_age_adjustment_sensitivity.py` |
 | Compatibility export for the age script | `prepare_age_reference.py`; filename/model-label adapter only, no model fitting |
 | Sleep-omission sensitivity (S10) | `run_sleep_omission_sensitivity.py` |

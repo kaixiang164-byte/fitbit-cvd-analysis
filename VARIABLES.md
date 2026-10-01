@@ -66,7 +66,10 @@ duration. Both fields must be available and minutes in bed positive. With at
 least 7 valid main-sleep days, the binary indicator is 1 if strictly more than
 75% of valid days have a ratio <=0.60; otherwise it is 0. Missing/invalid days
 are excluded from the denominator. Fewer than 7 valid days fails eligibility.
-Additional upstream quality/duplicate-episode rules are not checked here.
+Sleep-efficiency calculations were checked against the underlying main-sleep
+records during cohort preparation. This downstream package consumes the resulting
+binary flag; episode-level processing and sleep-coverage assessment precede its
+prepared-cohort inputs.
 
 Depression/anxiety are Personal Medical History **ever-diagnosed** responses
 reported as completed in `[t0,tM)`, not current symptom scales or proof of new

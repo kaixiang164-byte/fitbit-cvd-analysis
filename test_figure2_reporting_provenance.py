@@ -78,6 +78,18 @@ class Figure2ReportingProvenanceTests(unittest.TestCase):
         with self.assertRaisesRegex(RuntimeError, "only the three Figure 2"):
             self.validate()
 
+    def test_accepts_m1_label_revision_without_mutating_originals(self):
+        self.revision["scope"] = "figure2-m1-label-reporting-only"
+        before = copy.deepcopy(self.manifest)
+        self.assertEqual(self.validate(), self.visuals)
+        self.assertEqual(self.manifest, before)
+
+    def test_m1_label_revision_rejects_scientific_csv_override(self):
+        self.revision["scope"] = "figure2-m1-label-reporting-only"
+        self.revision["reporting_artifacts_sha256"]["mediation_bootstrap_summary.csv"] = "new-summary"
+        with self.assertRaisesRegex(RuntimeError, "only the three Figure 2"):
+            self.validate()
+
     def test_rejects_unreviewed_source(self):
         self.hashes[Path(analysis.__file__).name] = "unreviewed-source"
         with self.assertRaisesRegex(RuntimeError, "without a recorded"):

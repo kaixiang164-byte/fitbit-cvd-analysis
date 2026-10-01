@@ -1,5 +1,19 @@
 # Source-package checks
 
+## S15 reporting supplement — 2026-09-24
+
+- `python3 -B -m unittest discover -v -p 'test_*.py'`:
+  **66 synthetic or mocked-input tests passed**, including the 9 new S15 tests.
+- `python3 -B -m unittest -v test_crude_adjusted_steps_comparison.py`:
+  **9 synthetic tests passed**. Checks cover fixed scaling and identical rows,
+  direct multinomial agreement, cross-logit contrast covariance, adjusted-reference
+  reproduction, invalid/missing inputs and inconsistent Group/setting labels,
+  unchanged inputs, convergence, and S15 rendering.
+- The source and test files match their reviewed working copies. No generated
+  study estimates, missingness exports, participant records or PDF assets are
+  included in this code-only package. The local study-data reporting run is
+  distinct from these synthetic package tests.
+
 ## Source-update checks — 2026-09-24
 
 - `python -B -m unittest -v test_setting_reassignment_sensitivity`:
