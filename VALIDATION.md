@@ -1,73 +1,55 @@
-# Source-package checks
+# Source-package validation
 
-## S15 reporting supplement — 2026-09-24
+## Current checks
 
-- `python3 -B -m unittest discover -v -p 'test_*.py'`:
-  **66 synthetic or mocked-input tests passed**, including the 9 new S15 tests.
-- `python3 -B -m unittest -v test_crude_adjusted_steps_comparison.py`:
-  **9 synthetic tests passed**. Checks cover fixed scaling and identical rows,
-  direct multinomial agreement, cross-logit contrast covariance, adjusted-reference
-  reproduction, invalid/missing inputs and inconsistent Group/setting labels,
-  unchanged inputs, convergence, and S15 rendering.
-- The source and test files match their reviewed working copies. No generated
-  study estimates, missingness exports, participant records or PDF assets are
-  included in this code-only package. The local study-data reporting run is
-  distinct from these synthetic package tests.
+On 2026-10-05, using Python 3.9.25 and the dependencies documented in
+[ENVIRONMENT.md](ENVIRONMENT.md):
 
-## Source-update checks — 2026-09-24
+```bash
+python3 -B -m unittest discover -v -p 'test_*.py'
+python3 -B run_primary_and_moderated_notebook_source.py --verify-sources
+```
 
-- `python -B -m unittest -v test_setting_reassignment_sensitivity`:
-  **13 new synthetic tests passed**. Coverage includes weighted and unweighted
-  probability calibration, endpoint scenarios, invalid-input rejection,
-  multinomial parameters/full covariance versus statsmodels, rational
-  fractional counts versus repeated rows, bootstrap multiplicity equivalence,
-  warm starts, finite-difference derivatives and extreme-logit stability.
-- `python -B -m unittest discover -v -p 'test_*.py'`: **57 tests passed**,
-  including the existing 44 and the new 13.
-- `--help` for the allocation analysis and S14/S2 renderer imported correctly
-  using the existing pinned scientific dependencies and local helper module.
-- The three newly included source/test files and the existing unclassified-
-  setting helper matched their reviewed working sources byte-for-byte.
-- The seven notebook-source hashes still passed `--verify-sources`.
-- `python -B validate_release.py`: the refreshed manifest inventory, hashes,
-  Python syntax and limited disclosure scan passed for the local source set.
+All **71 synthetic or mocked-input tests passed**. All seven embedded notebook
+source-cell hashes and syntax checks passed. No participant data were used.
 
-These checks ran on manufactured inputs only; no participant dataset or
-aggregate study output was copied into or analysed from this package. The
-new files postdate the earlier release `9e03508`; their hashes are included
-in this version's manifest. These tests are not independent
-reproduction of the reported cohort/results. The renderer was import/syntax
-checked here; manuscript asset rendering is separate from these source-only
-package checks.
+## Test coverage
 
-## Original package checks — 2026-09-17
+| Component | Checks |
+| --- | --- |
+| Primary-model wrapper | Synthetic M1/PCA/M2/pathway execution; embedded source integrity; output-directory isolation; compatibility with the sex/setting branches |
+| Pooled decomposition | Probability-scale decomposition and shared-denominator identities; pooled score scaling; deterministic synthetic resamples |
+| Steps and age splines | Design rank and parameter counts; likelihood/AIC identities; linear-reference agreement; case-only scaling; nonconvergence checks |
+| Missing-setting allocation | Weighted calibration; endpoint scenarios; fractional multinomial parameters and full covariance against statsmodels; repeated-row equivalence; finite-difference derivatives; stable extreme logits |
+| Unadjusted/adjusted comparison | Identical rows and fixed scaling; direct multinomial agreement; cross-logit covariance; reference reproduction; invalid-input rejection; S15 rendering |
+| Table 1 | Sample SDs; derived scores; full-column percentage denominators; missing/invalid input rejection; unclassified-setting exclusion; aggregate-only output; LaTeX rendering |
+| Reporting provenance | Accepted source/artifact hash chains; rejection of altered numerical exports, mismatched originals and unreviewed source changes |
 
-The following checks were run on this source-only package using Python 3.9.25
-and the installed scientific dependencies documented in ENVIRONMENT.md:
+Synthetic runtime files are created in temporary directories. They do not
+originate from participant data. The Table 1 generator implements the reported
+definitions, but its agreement with the historical study table has not been
+checked on participant data during packaging.
 
-- `python -B -m unittest discover -v -p 'test_*.py'`: **44 tests passed**,
-  including nine tests for the newly implemented Table 1 generator.
-- `python -B run_primary_and_moderated_notebook_source.py --verify-sources`:
-  all seven embedded source-cell hashes and Python syntax passed.
-- The nine copied existing standalone source/test files were byte-identical
-  to their current source counterparts; mathematical code was not reformulated.
-- `python -B -m pip check`: no broken installed requirements.
-- `python -B validate_release.py`: manifest inventory, hashes, Python syntax
-  and the limited credential/path scan passed for the reviewed file set.
+## Inventory and disclosure checks
 
-Tests cover synthetic M1/PCA/M2/pathway execution, input compatibility with
-separate-sex and unclassified-setting branches, the age-reference adapter,
-linear-reference agreement, spline rank/parameter counts, pooled decomposition
-identities, score scaling, deterministic synthetic resamples and provenance
-guard failures. Table 1 checks cover sample SDs, derived scores, full-column
-denominators, unclassified-setting exclusion, missing/invalid input rejection,
-aggregate-only output, LaTeX rendering and non-overwriting output boundaries.
-Synthetic runtime files are created in temporary directories;
-they do not originate from participant data.
+```bash
+python3 -B validate_release.py
+```
 
-Not performed: a full study-data rerun, independent upstream cohort/measurement
-verification, the 2,000-draw moderation bootstrap, or a fresh dependency
-installation as part of these local checks. The moderation source was
-hash/syntax checked, not numerically
-reproduced on the study data during packaging. Passing tests is not a claim of
-complete end-to-end reproduction or exhaustive confidentiality certification.
+The validator checks the release allowlist, SHA-256 hashes, Python syntax,
+private absolute paths and selected credential patterns. It is not an
+exhaustive privacy review or evidence of scientific validity. Generated data,
+logs, figures and result exports are outside the source-only release inventory.
+
+## Earlier recorded checks
+
+| Date | Recorded result |
+| --- | --- |
+| 2026-09-17 | 44 tests passed; seven embedded notebook source hashes verified; `pip check` reported no broken installed requirements; source inventory and limited disclosure scan passed |
+| 2026-09-24, allocation addition | 57 tests passed, including 13 allocation tests; allocation/rendering CLI imports, notebook source hashes and source inventory passed |
+| 2026-09-24, S15 addition | 66 tests passed, including nine unadjusted/adjusted comparison tests |
+
+These checks did not include a full study-data rerun, independent upstream
+cohort or measurement verification, the 2,000-draw moderation bootstrap, or a
+fresh dependency installation. The tests therefore do not establish complete
+end-to-end reproduction of the manuscript results.

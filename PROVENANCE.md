@@ -1,45 +1,32 @@
 # Source provenance and verification boundary
 
-Package preparation date: 2026-09-17. Intended account: `kaixiang164-byte`.
+Initial package preparation: 2026-09-17. Repository owner: `kaixiang164-byte`.
 Repository: https://github.com/kaixiang164-byte/fitbit-cvd-analysis.
 This is a code-only downstream analysis package, not a new study-data analysis.
 Its Git commit identifies the uploaded version; no archival DOI is assigned.
 
-## Source update — 2026-09-24
+## Standalone sources and version history
 
-Three reviewed working sources were copied byte-for-byte into this package:
-`run_setting_reassignment_sensitivity.py`,
-`test_setting_reassignment_sensitivity.py`, and
-`build_setting_reassignment_si.py`. They add the post-hoc missing-setting
-allocation sensitivity and source-only S14/S2 rendering. These additions
-postdate the earlier release `9e03508`; the repository commit identifies the
-version containing them. The manifest records their source hashes and the
-earlier release separately.
+The initial release copied six standalone analysis/rendering scripts and three
+test modules from the working sources without numerical changes.
+`release_manifest.json` records the current files and SHA-256 digests; Git
+history records subsequent changes.
 
-The new analysis imports the existing unclassified-setting helper module,
-which matches the working helper byte-for-byte. Its scientific dependencies
-are already pinned in `requirements.txt`; no new dependency was introduced.
-Its tests use manufactured arrays only. Copying and validating this package
-did not rerun study data; the separate working analysis produced the aggregate
-results used for manuscript preparation. No participant input, result CSV,
-bootstrap draw, figure, metadata export or notebook was copied into this
-source-only package. The renderer reads aggregate estimates at runtime,
-requires the documented 2,000-bootstrap configuration, and uses conditional
-sampling CIs rather than the optional random-assignment scenario intervals.
+The 2026-09-24 additions comprise the post-hoc missing-setting allocation
+analysis, its synthetic tests, the S14/main Fig 3 renderer, and the S15
+unadjusted/adjusted comparison and tests. They postdate release `9e03508`.
+The allocation analysis imports the unclassified-setting helper and uses the
+existing scientific dependencies. Its renderer reads aggregate outputs,
+requires 2,000 bootstrap replicates, and uses conditional sampling CIs rather
+than the optional random-assignment scenario intervals.
 
-## Preserved standalone sources
-
-The six existing analysis/rendering scripts and three existing test modules
-were copied byte-for-byte from the current working sources. The manifest records
-their SHA-256 digests. Study source files, notebooks, input data and fitted
-results were not edited during this packaging work.
-
-`run_robustness_and_figure2.py` is the current reviewed source, including the
-Steps spline rank correction and the Figure 2 fixed-exposure-contrast label.
-It is not relabelled as the exact source of the earlier canonical bootstrap.
-The model-fitting functions are preserved. A new authorised run creates its
-own manifest; existing historical provenance must not be overwritten simply
-to make a newer source pass an older run's checks.
+`run_robustness_and_figure2.py` includes the Steps spline rank correction and
+Figure 2 labels identifying the fixed exposure contrast, M1 probabilities and
+the no-recorded-CVD reference group.
+Its source therefore differs from the earlier canonical bootstrap run.
+Run manifests distinguish fitted-output provenance from reporting changes.
+Each authorised run creates its own manifest; historical hashes must not be
+overwritten to bypass a mismatch.
 
 ## Notebook source wrapper
 
@@ -52,9 +39,9 @@ The prepared CSV path and working directory are explicit. No notebook JSON,
 saved outputs or original participant inputs are distributed.
 
 The source cells retain historical labels and a descriptive coefficient-change
-export. Those outputs are not additional findings endorsed by the current
-manuscript; coefficient attenuation is not proof of mediation. The variable
-dictionary and manuscript define the current measurement/interpretation terms.
+export, which is not a reported mediation result. Coefficient attenuation does
+not establish mediation. The variable dictionary defines measurement and
+interpretation terms.
 
 ## Release-only additions
 
@@ -64,20 +51,18 @@ dictionary and manuscript define the current measurement/interpretation terms.
   determinism tests.
 - `test_notebook_wrapper_synthetic.py`: source-wrapper/adapter tests using
   generated data only.
-- `run_table1_descriptive.py` and `test_table1_descriptive.py`: newly written
-  descriptive-table generator and synthetic checks following the reported
-  Table 1 definitions. These are not recovered historical extraction or
-  table-generation code; study-data agreement has not been checked during
-  packaging.
+- `run_table1_descriptive.py` and `test_table1_descriptive.py`: a descriptive-table
+  generator and synthetic tests implementing the reported Table 1 definitions.
+  This is a release implementation, not the historical table-generation code;
+  agreement with the historical study table has not been checked during packaging.
 - Release README, variable dictionary, environment specification, execution
   instructions, manifest and inventory validator.
 
-Test results document the tested functions and I/O boundaries, not independent
-recovery of the original cohort. In particular, the upstream eligibility and
-source-field definitions are prerequisites, not reconstructed by these scripts.
-The source-only package does not automatically generate every manuscript
-layout. The new Table 1 generator requires the documented prepared cohort and
-does not establish that historical source records met upstream eligibility.
+Tests cover the documented functions and I/O boundaries using synthetic data.
+They do not independently reproduce the original cohort or study results.
+Upstream eligibility and source-field processing are prerequisites; these
+scripts operate on the prepared cohort. Not all manuscript layouts are generated
+automatically.
 
 ## Confidentiality
 

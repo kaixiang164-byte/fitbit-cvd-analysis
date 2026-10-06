@@ -226,7 +226,7 @@ def render_s15(estimates):
     for contrast in CONTRASTS:
         crude = estimates.loc[estimates.model.eq("Unadjusted") & estimates.contrast.eq(contrast)].iloc[0]
         adjusted = estimates.loc[estimates.model.eq("M1 adjusted") & estimates.contrast.eq(contrast)].iloc[0]
-        label = contrast.replace("Acute", "Acute care")
+        label = contrast.replace("Acute", "Acute care").replace("vs control", "vs no recorded CVD")
         lines.append(f"{label} & {value(crude)} & {p_value(crude)} & "
                      f"{value(adjusted)} & {p_value(adjusted)} \\\\")
     first = estimates.iloc[0]
@@ -257,14 +257,14 @@ Comparison & OR (95\% CI) & $p$ & OR (95\% CI) & $p$ \\
 
 {\footnotesize
 """ + (
-        f"Both models included {int(first.n)} participants: {int(first.n_control)} controls, "
+        f"Both models included {int(first.n)} participants: {int(first.n_control)} participants without recorded CVD, "
         f"{int(first.n_outpatient)} outpatient and {int(first.n_acute)} acute-care cases. "
         f"The original pooled Steps SD was {first.steps_SD:.2f} steps/day. "
     ) + r"""The unadjusted model included Steps only; M1 additionally included linear
 standardised age, sex at birth, smoking frequency and drinking frequency.
 The acute-care-versus-outpatient contrast was calculated from each fitted
 multinomial model using the full covariance between its outcome equations,
-not by comparing the significance of two control-referenced estimates.
+not by comparing the significance of two estimates using no recorded CVD as the reference.
 There were no missing values in the final sample for the outcome, exposure,
 adjustment variables or the eight source indicators of the health-burden score.
 Differences between unadjusted and adjusted ORs are descriptive and are not a

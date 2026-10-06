@@ -102,7 +102,9 @@ class Table1SyntheticTests(unittest.TestCase):
     def test_tex_contains_current_definitions_and_no_identifiers(self):
         summary, metadata = table1.summarize_table1(self.cohort)
         rendered = table1.render_table1_tex(summary, metadata)
-        self.assertIn(r"Control ($N=2$)", rendered)
+        self.assertIn(r"\shortstack{No recorded CVD\\($N=2$)}", rendered)
+        self.assertIn(r"\shortstack{Acute care\\($N=2$)}", rendered)
+        self.assertNotIn("Control", rendered)
         self.assertIn(r"Smoking, $>3$/month", rendered)
         self.assertIn(r"1 (50.0\%)", rendered)
         self.assertIn("Low sleep-efficiency indicator", rendered)
@@ -110,6 +112,15 @@ class Table1SyntheticTests(unittest.TestCase):
         self.assertNotIn("p value", rendered)
         self.assertEqual(rendered.count(r"\begin{table}"), 1)
         self.assertEqual(rendered.count(r"\end{table}"), 1)
+
+    def test_display_labels_do_not_change_internal_outcomes_or_values(self):
+        summary, metadata = table1.summarize_table1(self.cohort)
+        before = summary.copy(deep=True)
+        before_metadata = json.dumps(metadata, sort_keys=True)
+        table1.render_table1_tex(summary, metadata)
+        pd.testing.assert_frame_equal(summary, before)
+        self.assertEqual(json.dumps(metadata, sort_keys=True), before_metadata)
+        self.assertEqual(set(summary.outcome), {"Control", "Outpatient", "Acute"})
 
     def test_runtime_io_is_aggregate_exclusive_and_outside_code(self):
         with tempfile.TemporaryDirectory(prefix="table1-manufactured-") as temporary:

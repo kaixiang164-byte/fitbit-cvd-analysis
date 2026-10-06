@@ -15,7 +15,7 @@ manufactured cohorts by tests and do not enforce the manuscript's exact counts.
 ## 1. Primary models and prerequisite exports
 
 Table 1 can be generated independently from the same prepared cohort, without
-fitting models. Run this new generator from the code directory in the authorised
+fitting models. Run the generator from the code directory in the authorised
 Workbench and use a separate, non-existent output directory:
 
 ```bash
@@ -27,8 +27,8 @@ metadata. The CLI checks classified counts against 5,780/2,127/385; unclassified
 CVD settings are excluded. Every displayed variable must be complete in the
 classified sample: missing values fail rather than becoming zero or silently
 changing denominators. Binary percentages use the full outcome-column total;
-continuous summaries use sample SD (`ddof=1`). This newly written script follows
-the current documented Table 1 definitions and has synthetic tests only; an
+continuous summaries use sample SD (`ddof=1`). This release's Table 1 generator
+follows the documented definitions and has synthetic tests only; an
 authorised run must check agreement with historical values before replacing
 the manuscript table. It does not reconstruct upstream selection or source
 measurements. Keep outputs in the Workbench until disclosure review.
@@ -146,14 +146,14 @@ all possible acute/outpatient assignments of missing settings.
 
 ### 5a. Missing-setting allocation scenarios
 
-This addition postdates the earlier release `9e03508`. It is distinct from the S7
-four-category model. It adds the 455 missing-setting cases to the original
+This analysis is distinct from the S7 four-category model. It adds the
+455 missing-setting cases to the original
 8,292 classified-cohort participants under hypothetical acute/outpatient
 probabilities, excludes the 148 combined Other/Unknown cases, and does not
 refit PCA or mediation. The original prepared 8,895-person cohort, M1 scaling
 and `m1_primary_pairwise_results_python.csv` are required. The existing
 `run_unclassified_setting_sensitivity.py` module supplies the compatible
-input/design/reference helpers and must remain beside the new analysis script.
+input/design/reference helpers and must remain beside the allocation script.
 
 Run from the source directory, using private inputs and a new output directory
 in the authorised Workbench (not this public-release checkout):

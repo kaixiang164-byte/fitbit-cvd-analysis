@@ -6,14 +6,9 @@ indirect associations in the All of Us Research Program.
 
 **Repository:** https://github.com/kaixiang164-byte/fitbit-cvd-analysis
 
-**Source update (2026-09-24):** this version includes the missing-setting
-allocation analysis, its synthetic tests and the S14/main Fig 3 renderer. These were
-added after the earlier release `9e03508`; cite the current Git commit rather
-than that earlier version when using these additions.
-
-This source-only package documents the downstream analysis. Use the Git commit
-identifier to identify a version; no archival DOI has been assigned. An open
-source licence has not yet been selected, so no MIT or other licence is implied.
+This source-only package documents the downstream analysis. Cite the Git commit
+used for an analysis; no archival DOI has been assigned. No open-source licence
+has been selected.
 
 ## Scope
 
@@ -27,16 +22,15 @@ must obtain their own access through https://www.researchallofus.org/register/.
 See [VARIABLES.md](VARIABLES.md) for input fields, measurement windows and
 coding; [ENVIRONMENT.md](ENVIRONMENT.md) for dependencies and numerical settings;
 and [RUNNING.md](RUNNING.md) for execution order and output dependencies.
-Legacy source names such as `vulnerability`, `has_sleep_disorder`, `smoker` and
-`moderate/heavy` are retained to preserve the existing code: their current
-scientific meanings are defined in the variable dictionary. Code labels are
-not evidence of clinical diagnoses, causal effects or alcohol-volume categories.
+Internal names such as `vulnerability`, `has_sleep_disorder`, `smoker` and
+`moderate/heavy` are retained for compatibility. Their scientific meanings are
+defined in the variable dictionary rather than inferred from those names.
 
 ## Analysis coverage
 
 | Component | Source / output role |
 | --- | --- |
-| Table 1 descriptive characteristics | `run_table1_descriptive.py`; new implementation of documented row definitions, column-total percentages and sample SDs, not a recovered historical script |
+| Table 1 descriptive characteristics | `run_table1_descriptive.py`; documented row definitions, column-total percentages and sample SDs; see the validation scope below |
 | Primary M1, Steps-by-sex, pooled PCA and M2 | `run_primary_and_moderated_notebook_source.py`, primary stage: exported current notebook source cells and prerequisite input producers |
 | Unadjusted and adjusted Steps comparison (S15) | `run_crude_adjusted_steps_comparison.py`; identical classified sample and original Steps scale, full multinomial covariance, with reproduction of the saved M1 Steps estimates |
 | Formal pooled pathway interactions and conditional sex/age contrasts | Same wrapper, pathways/moderation stages; not interchangeable with separately fitted sex models |
@@ -44,23 +38,22 @@ not evidence of clinical diagnoses, causal effects or alcohol-volume categories.
 | Separate female/male mediation fits (S2) | `run_sex_stratified_mediation.py` |
 | Unclassified-setting sensitivity (S7) | `run_unclassified_setting_sensitivity.py` |
 | Hypothetical allocation of missing settings (S14/main Fig 3) | `run_setting_reassignment_sensitivity.py`; 455 missing-setting cases allocated under fixed scenarios, with 148 Other/Unknown cases excluded |
-| S14/main Fig 3 typesetting | `build_setting_reassignment_si.py`; reads reviewed aggregate outputs and consistently reports scenario-conditional sampling CIs |
+| S14/main Fig 3 typesetting | `build_setting_reassignment_si.py`; reads aggregate outputs and reports scenario-conditional sampling CIs |
 | Nonlinear age-adjustment sensitivity (S8) | `run_age_adjustment_sensitivity.py` |
 | Compatibility export for the age script | `prepare_age_reference.py`; filename/model-label adapter only, no model fitting |
 | Sleep-omission sensitivity (S10) | `run_sleep_omission_sensitivity.py` |
 | Shared pooled estimates for the main table and S3/S4 | `render_pooled_mediation_tex.py` |
 
-The primary/moderation wrapper contains source-only notebook cells, not saved
-execution output. The separately maintained pooled script is the canonical
-implementation of the pooled bootstrap; the wrapper does not substitute an
-older pooled bootstrap cell. Downstream source coverage does not establish
-independent validation of upstream measurement dates or selection rules.
-Figure 1/S1 Fig are manuscript diagrams; S9 is phenotype documentation rather
-than a computed statistical table. The new Table 1 generator was tested on
-manufactured inputs, not rerun against the historical cohort during packaging.
-It rejects missing required classified-cohort fields rather than recoding them
-as absence. Do not claim that every manuscript asset is generated automatically
-or that synthetic tests independently reproduce the reported Table 1 values.
+The primary/moderation wrapper contains notebook source cells without saved
+execution output. The pooled bootstrap is implemented separately in
+`run_robustness_and_figure2.py`. Figure 1/S1 Fig are manuscript diagrams; S9 is
+phenotype documentation rather than a computed statistical table. This package
+does not automatically generate every manuscript layout.
+
+The Table 1 generator implements the documented definitions and rejects missing
+required fields rather than recoding them as absence. It was written for this
+release and tested on synthetic inputs; agreement with the historical study
+table has not been checked during packaging.
 
 ## Checks without study data
 
@@ -72,14 +65,13 @@ python -B validate_release.py
 Tests use synthetic data and mocked I/O. The inventory validator checks hashes,
 Python syntax and selected disclosure hazards; it is not proof of scientific
 validity or exhaustive privacy review. None of these checks reruns study data.
-The source-only provenance manifest distinguishes unmodified standalone scripts
-from the new notebook-source packaging wrapper and release documentation.
-The new allocation tests check synthetic calibration, fractional multinomial
-estimation and bootstrap behaviour; they do not independently reconstruct the
-study cohort or establish the true settings of unclassified cases. The
-analysis script also writes optional random-assignment scenario intervals for
-diagnostic review. Those are not confidence intervals for the fractional point
-estimate; the manuscript S14/main Fig 3 renderer uses only the conditional sampling CIs.
+See [VALIDATION.md](VALIDATION.md) for test coverage and
+[PROVENANCE.md](PROVENANCE.md) for source history and verification boundaries.
+Allocation tests cover calibration, fractional multinomial estimation and
+bootstrap behaviour on synthetic inputs. The allocation script also writes
+optional random-assignment scenario intervals for diagnostic use; these are
+not confidence intervals for the fractional point estimate. The S14/main
+Fig 3 renderer uses only the conditional sampling CIs.
 
 ## Release safety
 

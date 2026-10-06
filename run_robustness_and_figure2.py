@@ -801,6 +801,7 @@ def create_figure(data, curves, spline_test, mediation_summary):
         "Outpatient": "#2563EB",
         "Acute care": "#D94841",
     }
+    display_labels = {"Control": "No recorded\nCVD"}
     effect_colors = {
         "ACME": "#E07A1F",
         "ADE": "#2878B5",
@@ -831,7 +832,7 @@ def create_figure(data, curves, spline_test, mediation_summary):
             estimate,
             color=colors[category],
             linewidth=2.4,
-            label=category,
+            label=display_labels.get(category, category),
         )
 
     ax.set_title(
@@ -844,7 +845,8 @@ def create_figure(data, curves, spline_test, mediation_summary):
     ax.set_ylim(0, 0.86)
     ax.set_xlim(x_min, x_max)
     ax.grid(axis="y", color="#E5E7EB", linewidth=0.7)
-    ax.legend(frameon=False, loc="center right")
+    legend = ax.legend(frameon=False, loc="center right")
+    legend.get_texts()[0].set_fontsize(7.5)
 
     distribution_axis = ax.inset_axes([0.0, 0.0, 1.0, 0.13], zorder=0)
     distribution_axis.hist(
@@ -909,7 +911,8 @@ def create_figure(data, curves, spline_test, mediation_summary):
 
     ax.axvline(0, color="#6B7280", linewidth=1, linestyle="--")
     ax.set_yticks([2, 1, 0])
-    ax.set_yticklabels(["Control", "Outpatient", "Acute care"])
+    ax.set_yticklabels([display_labels["Control"], "Outpatient", "Acute care"])
+    ax.get_yticklabels()[0].set_fontsize(8)
     ax.set_xlabel(
         "Change in probability (percentage points)\n"
         "Steps: approximately 7,323 to 10,622/day"
@@ -1053,6 +1056,7 @@ def validate_canonical_code(manifest):
                 and revision.get("scope") in {
                     "figure2-exposure-label-reporting-only",
                     "figure2-m1-label-reporting-only",
+                    "figure2-reference-label-reporting-only",
                 }
                 and revision.get("mediation_refitted") is False
                 and revision.get("fitted_results_unchanged") is True):

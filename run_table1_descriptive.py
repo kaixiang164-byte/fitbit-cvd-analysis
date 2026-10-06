@@ -132,6 +132,11 @@ def summarize_table1(cohort, expected_counts=None):
 
 def render_table1_tex(summary, metadata):
     """Render current documented rows; values need review in the Workbench."""
+    group_labels = {
+        "Control": "No recorded CVD",
+        "Outpatient": "Outpatient",
+        "Acute": "Acute care",
+    }
     labels = {
         "Age at t0, years": r"Age at $t_0$, years",
         "Smoking, >3/month": r"Smoking, $>3$/month",
@@ -148,7 +153,9 @@ def render_table1_tex(summary, metadata):
         r"\label{tab:baseline}", r"\scriptsize", r"\setlength{\tabcolsep}{3.5pt}",
         r"\begin{tabularx}{\textwidth}{@{}>{\raggedright\arraybackslash}Xrrr@{}}", r"\toprule",
         "Characteristic & " + " & ".join(
-            f"{group} ($N={metadata['outcome_counts'][group]}$)" for group in EXPECTED_COUNTS
+            r"\shortstack{" + group_labels[group] + r"\\($N="
+            + str(metadata["outcome_counts"][group]) + r"$)}"
+            for group in EXPECTED_COUNTS
         ) + r" \\", r"\midrule",
     ]
     previous = None

@@ -118,8 +118,8 @@ not estimates of their true settings. Full methods are provided in S1 Text,
 \toprule
 \shortstack{Assumed acute\\fraction $q$, \%} &
 \shortstack{Allocation\\OR $e^{\lambda}$} &
-\shortstack{Outpatient\\vs control} &
-\shortstack{Acute care\\vs control} &
+\shortstack{Outpatient\\vs no recorded CVD} &
+\shortstack{Acute care\\vs no recorded CVD} &
 \shortstack{Acute care\\vs outpatient} \\
 \midrule
 \endfirsthead
@@ -127,8 +127,8 @@ not estimates of their true settings. Full methods are provided in S1 Text,
 \toprule
 \shortstack{Assumed acute\\fraction $q$, \%} &
 \shortstack{Allocation\\OR $e^{\lambda}$} &
-\shortstack{Outpatient\\vs control} &
-\shortstack{Acute care\\vs control} &
+\shortstack{Outpatient\\vs no recorded CVD} &
+\shortstack{Acute care\\vs no recorded CVD} &
 \shortstack{Acute care\\vs outpatient} \\
 \midrule
 \endhead
@@ -142,7 +142,7 @@ not estimates of their true settings. Full methods are provided in S1 Text,
 
 {\footnotesize
 Each scenario included 8747 participants: the original 8292 M1 participants
-(5780 controls, 2127 outpatient and 385 acute-care cases) plus 455 cases with
+(5780 participants without recorded CVD, 2127 outpatient and 385 acute-care cases) plus 455 cases with
 missing settings. The 148 cases labelled Other/Unknown remained excluded.
 The adjustment variables (age, sex, smoking frequency and drinking frequency)
 and original Steps standardisation (SD 3298.82 steps/day) were unchanged.

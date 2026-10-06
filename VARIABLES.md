@@ -2,14 +2,14 @@
 
 This package starts from a prepared, one-row-per-participant analysis dataset.
 It does not perform database extraction or reconstruct upstream eligibility.
-Upstream measurement definitions below document investigator-confirmed study
-rules; the scripts consume the supplied fields and cannot independently check
-their dates or source-record completeness. Legacy field names are retained for
+Upstream measurement definitions below describe the study's input requirements;
+the scripts consume the supplied fields rather than checking source-record dates
+or completeness. Internal field names are retained for
 compatibility and are not clinical diagnoses unless explicitly stated.
 
 ## Study timeline and eligibility
 
-- Baseline `t0`: investigator-confirmed range 2018-02-01 to 2020-10-01.
+- Baseline `t0`: 2018-02-01 to 2020-10-01.
 - Steps exposure: `[t0 - 12 months, t0)`; at least 12 months of prior Fitbit
   observation and at least 9 valid calendar months in the exposure window.
 - A valid Steps month contains at least 21 valid days. A valid day has at least
@@ -85,9 +85,8 @@ Upstream CVD screening used `condition_status_concept_id IN (32902, 32908)`:
 statuses were used for prior-CVD and pre-landmark screening and to determine
 control eligibility. Among eligible cases, only primary CVD records (32902)
 qualified for the final outcome, with the earliest such record determining
-date/setting. The investigator confirmed these rules on 23 September 2026,
-correcting the earlier `condition_type_concept_id` description. The same status
-rules applied across encounter settings. This downstream package consumes the
+date/setting. The same status rules apply across encounter settings.
+This downstream package consumes the
 prepared outcome labels; it does not execute or independently validate the
 upstream extraction.
 Upstream participant exclusions include prior CVD, missing or unknown diagnosis

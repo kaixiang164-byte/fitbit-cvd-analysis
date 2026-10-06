@@ -73,7 +73,7 @@ def main():
                     text.append(rf"\newcommand{{\{macro}{suffix}}}{{{value}}}")
 
     raw_rows = []
-    for target, label in zip(RAW, ("Control", "Outpatient", "Acute care")):
+    for target, label in zip(RAW, ("No recorded CVD", "Outpatient", "Acute care")):
         entries = [interval(get("Primary PCA", "Raw category probability", target, e))
                    for e in EFFECTS]
         raw_rows.append(" & ".join([label] + entries) + r" \\")
@@ -85,7 +85,7 @@ def main():
         for effect in EFFECTS:
             r = get("Primary PCA", "Pairwise-normalized", target, effect)
             entries.extend([interval(r), p_value(r)])
-        pair_rows.append(" & ".join([target] + entries) + r" \\")
+        pair_rows.append(" & ".join([target.replace("vs control", "vs no recorded CVD")] + entries) + r" \\")
     text.append("\\newcommand{\\PrimaryPairwiseMediationRows}{%\n" + "\n".join(pair_rows) + "\n}")
 
     robust_rows = []
@@ -96,7 +96,7 @@ def main():
                  "PCA with one combined lipid indicator")[i]
         for target in PAIRWISE:
             r = get(variant, "Pairwise-normalized", target, "ACME")
-            robust_rows.append(" & ".join([label, target, interval(r)]) + r" \\")
+            robust_rows.append(" & ".join([label, target.replace("vs control", "vs no recorded CVD"), interval(r)]) + r" \\")
     text.append("\\newcommand{\\RobustnessMediationRows}{%\n" + "\n".join(robust_rows) + "\n}")
     destination = BASE / "pooled_mediation_generated.tex"
     destination.write_text("\n".join(text) + "\n")
