@@ -14,13 +14,13 @@ compatibility and are not clinical diagnoses unless explicitly stated.
   observation and at least 9 valid calendar months in the exposure window.
 - A valid Steps month contains at least 21 valid days. A valid day has at least
   100 steps and at least 600 distinct minutes of heart-rate records.
-- Mediator-assessment endpoint `tM = t0 + 1 month`; window `[t0, tM)`.
-- Outcome landmark `t1 = t0 + 12 months`; both M1 and mediation ascertain
+- Health-burden assessment endpoint `tM = t0 + 1 month`; window `[t0, tM)`.
+- Outcome landmark `t1 = t0 + 12 months`; both M1 and exploratory mediation ascertain
   outcomes over `[t1, t0 + 36 months]`, a 24-month risk period.
 - The reported starting cohort of 10,365 already incorporates prior-CVD,
   wearable, EHR, sleep-coverage and survey-completeness eligibility. Excluding
   1,470 participants with CVD during `[t0,t1)` leaves 8,895 exported participants.
-- The same classified cohort of 8,292 is used for primary and mediation analyses:
+- The same classified cohort of 8,292 is used for primary association and exploratory mediation analyses:
   5,780 Control, 2,127 Outpatient, 385 Acute. A four-category sensitivity retains
   the additional 603 CVD cases with unclassified setting (148 other/unknown,
   455 missing setting). These counts are validation targets, not filters that
@@ -104,7 +104,7 @@ exclusions. The package does not reclassify secondary diagnoses as controls.
 
 | Derived variable | Definition |
 | --- | --- |
-| `Outcome_Status` | 0 Control, 1 Outpatient, 2 Acute care; unclassified cases enter only the separate four-category sensitivity. |
+| `Outcome_Status` | 0 Control, 1 Outpatient, 2 Acute care in the classified cohort. The four-category sensitivity retains all 603 unclassified cases; the allocation sensitivity adds the 455 missing-setting cases under hypothetical assignments and excludes the 148 other/unknown cases. |
 | `steps_z`, `age_z` | Pooled classified-cohort mean/SD standardization; sample SD (`ddof=1`). Fixed original scales are used in bootstrap contrasts. |
 | `Sleep` | `has_sleep_disorder`. |
 | `Mental` | `has_depression + has_anxiety`, range 0-2. |
@@ -127,7 +127,7 @@ are exploratory statistical indirect/direct associations, not established
 biological mechanisms.
 
 Formal moderated analyses and descriptive sex-stratified models are separate
-analyses. Holm families are six primary pathway tests, six sex/age ACME
+analyses. Holm families are six secondary pathway-interaction tests, six sex/age ACME
 differences (two moderator comparisons by three outcome contrasts), and three
 exploratory sex-by-age difference-in-differences. Reported 95% intervals are
 pointwise; subgroup significance alone is not a test of heterogeneity.

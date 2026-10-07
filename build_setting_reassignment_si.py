@@ -167,7 +167,7 @@ care, respectively; $\lambda$ is then irrelevant. These endpoint scenarios
 are not mathematical bounds on the fitted association. Scenarios do not
 recover individual settings, identify the missingness mechanism, or resolve
 residual confounding. Values are rounded to three decimal places; PCA and
-mediation models were not re-estimated. SD=standard deviation.
+exploratory mediation models were not re-estimated. SD=standard deviation.
 \par}
 \end{document}
 """

@@ -2,7 +2,7 @@
 
 ## Current checks
 
-On 2026-10-05, using Python 3.9.25 and the dependencies documented in
+On 2026-10-07, using Python 3.9.25 and the dependencies documented in
 [ENVIRONMENT.md](ENVIRONMENT.md):
 
 ```bash
