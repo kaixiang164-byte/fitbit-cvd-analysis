@@ -63,19 +63,22 @@ class ClinicalConceptExportContractTests(unittest.TestCase):
         self.assertNotRegex(self.code.lower(), r"min_levels_of_separation|max_levels_of_separation")
 
     def test_missing_seeds_and_descendant_metadata_fail_instead_of_dropping(self):
-        self.assertEqual(len(re.findall(r"ASSERT NOT EXISTS\s*\(", self.code)), 3)
+        self.assertEqual(len(re.findall(r"ASSERT NOT EXISTS\s*\(", self.code)), 2)
         self.assertIn("vocabulary.concept_id = seeds.seed_concept_id", self.code)
         self.assertIn("WHERE vocabulary.concept_id IS NULL", self.code)
         self.assertIn("A Clinical seed is absent", self.code)
-        self.assertIn("An included descendant or supplied lipid concept is absent", self.code)
+        self.assertIn("An included descendant or exact-match lipid concept is absent", self.code)
 
-    def test_lipid_sets_are_required_nonempty_arrays_without_null_entries(self):
-        for parameter in ("hyperlipidaemia_concept_ids", "high_cholesterol_concept_ids"):
-            self.assertIn("ASSERT @" + parameter + " IS NOT NULL", self.code)
-            self.assertIn("ARRAY_LENGTH(@" + parameter + ") > 0", self.code)
-            self.assertIn("FROM UNNEST(@" + parameter + ") AS concept_id", self.code)
-        self.assertIn("FROM clinical_lipid_concepts WHERE concept_id IS NULL", self.code)
-        self.assertNotRegex(self.code, r"\b(?:432867|437827)\b")
+    def test_lipid_sets_contain_only_the_two_exact_match_concepts(self):
+        pairs = re.findall(
+            r"STRUCT\('([^']+)' AS component,\s*(\d+) AS concept_id\)",
+            self.code,
+        )
+        self.assertEqual(pairs, [
+            ("hyperlipidaemia", "432867"), ("high_cholesterol", "437827"),
+        ])
+        self.assertNotIn("@hyperlipidaemia_concept_ids", self.code)
+        self.assertNotIn("@high_cholesterol_concept_ids", self.code)
 
     def test_lipid_membership_is_not_inferred_or_hierarchy_expanded(self):
         hierarchy_sources = re.findall(
@@ -87,7 +90,7 @@ class ClinicalConceptExportContractTests(unittest.TestCase):
         self.assertEqual(self.code.count("`PROJECT.DATASET.concept_ancestor`"), 1)
         normalized = " ".join(self.code.split())
         self.assertIn("SELECT component, concept_id FROM clinical_lipid_concepts", normalized)
-        self.assertIn("'supplied_lipid_concept_set'", self.code)
+        self.assertIn("'exact_match_lipid_concept'", self.code)
         self.assertIn("'nonlipid_seed_and_descendants'", self.code)
         self.assertIn("AS definition_source", self.code)
         self.assertIn("AS is_explicit_inclusion", self.code)

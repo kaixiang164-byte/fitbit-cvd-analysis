@@ -17,7 +17,7 @@ source-cell hashes and syntax checks passed. No participant data were used.
 
 | Component | Checks |
 | --- | --- |
-| Clinical vocabulary export | Fourteen non-lipid seeds and their descendant expansion; two required, nonempty lipid concept arrays without implicit expansion; within-component deduplication, cross-component overlap, definition-source labels, missing-concept assertions and vocabulary-only scope; eight static checks without BigQuery execution |
+| Clinical vocabulary export | Fourteen non-lipid seeds and their descendant expansion; exact-match lipid concepts 432867 and 437827 without descendant expansion or automatic cross-assignment; within-component deduplication, cross-component overlap, definition-source labels, missing-concept assertions and vocabulary-only scope; eight static checks without BigQuery execution |
 | Primary-model wrapper | Synthetic M1/PCA/M2/pathway execution; embedded source integrity; output-directory isolation; compatibility with the sex/setting branches |
 | Pooled decomposition | Probability-scale decomposition and shared-denominator identities; pooled score scaling; deterministic synthetic resamples |
 | Steps and age splines | Design rank and parameter counts; likelihood/AIC identities; linear-reference agreement; case-only scaling; nonconvergence checks |

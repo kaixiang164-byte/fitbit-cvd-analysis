@@ -36,20 +36,20 @@ defined in the variable dictionary rather than inferred from those names.
 
 `export_clinical_concepts.sql` prepares a Clinical component dictionary against
 the pinned CDR v8 `concept` and `concept_ancestor` tables. The 14 explicit
-non-lipid seeds include all descendants. The two lipid components instead
-require separately supplied, complete concept-ID sets; neither is inferred
-from the other, and the script does not expand those supplied sets. The output
+non-lipid seeds include all descendants. The two lipid components instead use
+exact matches to 432867 (hyperlipidaemia) and 437827 (high cholesterol),
+respectively, without descendant expansion or automatic cross-assignment. The output
 retains concept metadata, definition source and cross-component overlap. It reads no
 participant tables and does not construct participant flags, apply diagnosis
 dates, or reproduce upstream cohort extraction. Execution instructions and the
-non-lipid seeds and required lipid inputs are in [RUNNING.md](RUNNING.md) and
+non-lipid seeds and exact-match lipid definitions are in [RUNNING.md](RUNNING.md) and
 [VARIABLES.md](VARIABLES.md).
 
 ## Analysis coverage
 
 | Component | Source / output role |
 | --- | --- |
-| Clinical component vocabulary dictionary | `export_clinical_concepts.sql`; non-lipid seeds plus descendants and separately supplied complete lipid sets, without participant records or counts |
+| Clinical component vocabulary dictionary | `export_clinical_concepts.sql`; non-lipid seeds plus descendants and two exact-match lipid concepts, without participant records or counts |
 | Table 1 descriptive characteristics | `run_table1_descriptive.py`; documented row definitions, column-total percentages and sample SDs; see the validation scope below |
 | Primary M1, Steps-by-sex, pooled PCA and M2 | `run_primary_and_moderated_notebook_source.py`, primary stage: exported current notebook source cells and prerequisite input producers |
 | Unadjusted and adjusted Steps comparison (S15) | `run_crude_adjusted_steps_comparison.py`; identical classified sample and original Steps scale, full multinomial covariance, with reproduction of the saved M1 Steps estimates |

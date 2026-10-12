@@ -1,19 +1,9 @@
 -- BigQuery Standard SQL: vocabulary-only Clinical component dictionary.
 -- Replace PROJECT.DATASET with the project's pinned CDR v8 dataset identifier.
 -- Run the complete script, then export the final result set as a dictionary CSV.
--- Required named parameters, both ARRAY<INT64>: @hyperlipidaemia_concept_ids
--- and @high_cholesterol_concept_ids. Each is a complete operational lipid set.
 -- Non-lipid seeds include all descendants; no direct-child relationship is assumed.
--- Lipid sets are used as supplied, without descendant expansion or inference
--- from the other lipid component. Cross-component membership is retained.
-
-ASSERT @hyperlipidaemia_concept_ids IS NOT NULL
-  AND ARRAY_LENGTH(@hyperlipidaemia_concept_ids) > 0
-  AS 'Supply a nonempty hyperlipidaemia_concept_ids ARRAY<INT64>.';
-
-ASSERT @high_cholesterol_concept_ids IS NOT NULL
-  AND ARRAY_LENGTH(@high_cholesterol_concept_ids) > 0
-  AS 'Supply a nonempty high_cholesterol_concept_ids ARRAY<INT64>.';
+-- Each lipid component uses its single exact-match concept below, without
+-- descendant expansion or automatic assignment from the other component.
 
 CREATE TEMP TABLE clinical_seeds AS
 SELECT * FROM UNNEST([
@@ -48,15 +38,10 @@ ASSERT NOT EXISTS (
 ) AS 'A Clinical seed is absent from the selected CDR v8 vocabulary; stop rather than drop it.';
 
 CREATE TEMP TABLE clinical_lipid_concepts AS
-SELECT 'hyperlipidaemia' AS component, concept_id
-FROM UNNEST(@hyperlipidaemia_concept_ids) AS concept_id
-UNION DISTINCT
-SELECT 'high_cholesterol' AS component, concept_id
-FROM UNNEST(@high_cholesterol_concept_ids) AS concept_id;
-
-ASSERT NOT EXISTS (
-  SELECT 1 FROM clinical_lipid_concepts WHERE concept_id IS NULL
-) AS 'Lipid concept arrays must not contain NULL values.';
+SELECT * FROM UNNEST([
+  STRUCT('hyperlipidaemia' AS component, 432867 AS concept_id),
+  STRUCT('high_cholesterol' AS component, 437827 AS concept_id)
+]);
 
 CREATE TEMP TABLE expanded_clinical_concepts AS
 WITH included_concepts AS (
@@ -80,7 +65,7 @@ ASSERT NOT EXISTS (
   LEFT JOIN `PROJECT.DATASET.concept` AS vocabulary
     ON vocabulary.concept_id = expanded.concept_id
   WHERE vocabulary.concept_id IS NULL
-) AS 'An included descendant or supplied lipid concept is absent from concept; stop rather than drop it.';
+) AS 'An included descendant or exact-match lipid concept is absent from concept; stop rather than drop it.';
 
 SELECT
   expanded.component,
@@ -96,7 +81,7 @@ SELECT
   vocabulary.invalid_reason,
   CASE
     WHEN expanded.component IN ('hyperlipidaemia', 'high_cholesterol')
-      THEN 'supplied_lipid_concept_set'
+      THEN 'exact_match_lipid_concept'
     ELSE 'nonlipid_seed_and_descendants'
   END AS definition_source,
   EXISTS (

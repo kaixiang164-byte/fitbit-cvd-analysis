@@ -199,27 +199,25 @@ from the primary-diagnosis restriction used for the CVD outcome.
 | Diabetes | 201820, 201254, 201826, 4024659, 195771, 442793, 443238, 435216, 761051, 4058243 |
 | Chronic kidney disease | 46271022, 192279, 201313 |
 
-Hyperlipidaemia and high cholesterol are two separately coded indicators that
-may overlap; neither indicator is inferred from the other. Their reference
-concepts are 432867 (Hyperlipidemia) and 437827 (Pure hypercholesterolemia),
-respectively. These reference concepts are not complete operational matching
-sets and do not specify the inclusion/exclusion or hierarchy rules used for the
-lipid indicators. They must not be substituted for the complete lipid sets.
+Hyperlipidaemia and high cholesterol are separately coded using exact matches
+to `condition_concept_id` 432867 (Hyperlipidemia) and 437827 (Pure
+hypercholesterolemia), respectively. Neither lipid component includes
+descendants. A qualifying window-specific record of either exact concept
+sets only its corresponding indicator; neither is inferred from the other.
+Both indicators can be 1 when both concepts were recorded during the window.
+These are study matching rules, not a claim about the medical or vocabulary
+hierarchy relationships between the two diagnoses.
 
 `export_clinical_concepts.sql` expands the 14 non-lipid seeds using vocabulary
-tables only. It requires the complete lipid matching sets separately as named
-`ARRAY<INT64>` parameters `hyperlipidaemia_concept_ids` and
-`high_cholesterol_concept_ids`. Those parameter values are included as supplied,
-without descendant expansion or inference between lipid components. The query
-does not establish whether the operational lipid sets are nested. The output
+tables only and includes the two exact-match lipid concepts without descendant
+expansion or automatic cross-assignment. The output
 has one row per component/concept pair, retains cross-component membership,
 and reports `definition_source` and `is_explicit_inclusion` to distinguish
-non-lipid hierarchy expansion from the supplied lipid memberships.
+non-lipid hierarchy expansion from the exact-match lipid memberships.
 Standard-concept status, domain and invalid-reason metadata are reported rather
 than used as implicit exclusion filters. Missing seeds or missing `concept`
-rows for included descendants or supplied lipid concepts cause an assertion
-failure instead of being dropped. Lipid parameters must be nonempty and contain
-no null entries.
+rows for included descendants or exact-match lipid concepts cause an assertion
+failure instead of being dropped.
 The exported dictionary contains no participant records or counts. It defines
 vocabulary membership, not a complete upstream extraction pipeline; the model
 scripts consume the five prepared binary indicators.
