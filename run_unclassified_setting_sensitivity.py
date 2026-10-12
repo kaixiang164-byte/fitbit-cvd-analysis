@@ -31,9 +31,9 @@ TERM_LABELS = {
     "steps_z": "Mean daily steps, per original pooled SD",
     "age_z": "Age, per original pooled SD",
     "C(sex_at_birth)[T.Male]": "Male sex",
-    "C(is_smoker)[T.1]": "Smoking code 1",
-    "C(is_drinker)[T.1]": "Drinking code 1",
-    "C(is_drinker)[T.2]": "Drinking code 2",
+    "C(is_smoker)[T.1]": "Recorded smoking",
+    "C(is_drinker)[T.1]": "Drinking, 2-4/month or 2-3/week",
+    "C(is_drinker)[T.2]": "Drinking, >=4/week",
 }
 CATEGORY_LABELS = {0: "Control", 1: "Outpatient", 2: "Acute", 3: "Unclassified"}
 CONTRASTS = (
@@ -86,10 +86,10 @@ def descriptive_comparison(data):
     cases = data.loc[data["outcome"].ne(0)].copy()
     for name, source, level in (
         ("Female sex", "sex_at_birth", "Female"),
-        ("Smoking code 1", "is_smoker", 1),
-        ("Drinking code 0", "is_drinker", 0),
-        ("Drinking code 1", "is_drinker", 1),
-        ("Drinking code 2", "is_drinker", 2),
+        ("Recorded smoking", "is_smoker", 1),
+        ("Drinking, never/monthly or less", "is_drinker", 0),
+        ("Drinking, 2-4/month or 2-3/week", "is_drinker", 1),
+        ("Drinking, >=4/week", "is_drinker", 2),
     ):
         cases[name] = cases[source].eq(level).astype(float).where(cases[source].notna())
     retained = cases.loc[cases["outcome"].isin([1, 2])]
@@ -99,8 +99,8 @@ def descriptive_comparison(data):
         ("age", "Age, years", "continuous"),
         ("avg_steps", "Mean daily steps, steps/day", "continuous"),
         *[(name, name, "binary") for name in (
-            "Female sex", "Smoking code 1", "Drinking code 0",
-            "Drinking code 1", "Drinking code 2",
+            "Female sex", "Recorded smoking", "Drinking, never/monthly or less",
+            "Drinking, 2-4/month or 2-3/week", "Drinking, >=4/week",
         )],
     ):
         first, second = retained[column].dropna(), excluded[column].dropna()
@@ -237,7 +237,9 @@ def write_supporting_table(directory, descriptive, steps, metadata, n_unknown, n
         else:
             first = f"{int(row.retained_count)} ({row.retained_percent:.1f}\\%)"
             second = f"{int(row.unclassified_count)} ({row.unclassified_percent:.1f}\\%)"
-        lines.append(f"{row.variable} & {first} & {second} & ${row.SMD_unclassified_minus_retained:.3f}$ & {row.retained_n_missing}/{row.unclassified_n_missing} " + r"\\")
+        label = {"Drinking, 2-4/month or 2-3/week": "Drinking, 2--4/month or 2--3/week",
+                 "Drinking, >=4/week": r"Drinking, $\geq4$/week"}.get(row.variable, row.variable)
+        lines.append(f"{label} & {first} & {second} & ${row.SMD_unclassified_minus_retained:.3f}$ & {row.retained_n_missing}/{row.unclassified_n_missing} " + r"\\")
     lines.extend([
         r"\bottomrule\end{tabularx}\par}",
         r"{\footnotesize Values are mean (SD) or $n$ (\%). SMD is the standardised mean difference, unclassified minus classified, using the square root of the mean of the two group variances; binary variables use Bernoulli variances. Each alcohol category is a separate indicator. Missing C/U gives the missing count in classified/unclassified cases for each variable. Percentages use available observations. No descriptive null-hypothesis tests were performed.\par}",
@@ -261,7 +263,7 @@ def write_supporting_table(directory, descriptive, steps, metadata, n_unknown, n
     lines.extend([
         r"\bottomrule\end{tabularx}\par}",
         r"{\footnotesize",
-        f"ORs are per 1 original pooled SD of mean daily steps ({row.steps_SD:.2f} steps/day). Both multinomial models adjust for age, sex, and the exported smoking and drinking codes using the same original M1 means and SDs; age SD is {row.age_SD:.2f} years. Female sex, smoking code 0, and drinking code 0 are predictor reference categories. The direct numeric-frequency coding, cutpoints, and measurement limitations are given in S1 Text. No recorded CVD is the outcome reference. Acute-care versus outpatient estimates use the jointly estimated coefficients and cross-logit covariance, not a separate binary model. Intervals are two-sided Wald 95\\% CIs.",
+        f"ORs are per 1 original pooled SD of mean daily steps ({row.steps_SD:.2f} steps/day). Both multinomial models adjust for age, sex, recorded smoking status and drinking-frequency categories using the same original M1 means and SDs; age SD is {row.age_SD:.2f} years. Female sex, documented never/non-smoker status, and never/monthly-or-less drinking are predictor reference categories. Smoking concepts and upstream eligibility, grouped past-year drinking responses, and measurement definitions are given in S1 Text. No recorded CVD is the outcome reference. Acute-care versus outpatient estimates use the jointly estimated coefficients and cross-logit covariance, not a separate binary model. Intervals are two-sided Wald 95\\% CIs.",
         f"The three-category model includes {int(row.n_control)} participants without recorded CVD, {int(row.n_outpatient)} outpatient recordings, and {int(row.n_acute)} acute-care recordings. The expanded model adds {n_unclassified} CVD records ({metadata['unclassified_percent_of_all_cvd']:.1f}\\% of all CVD cases): {n_unknown} other/unknown and {n_missing} missing settings. All model covariates were observed; no additional participants were excluded. The dataset was already restricted upstream to the $t_1$-landmark cohort; no further landmark exclusions were applied.",
         f"Unclassified is an administrative analysis category, not a new clinical phenotype or an imputation of the true recording setting. Similar known-setting associations support stability under this expanded outcome specification, but do not assess sensitivity to the unknown acute-care or outpatient assignments of these {n_unclassified} cases, establish random setting missingness, or rule out selection bias. PCA and exploratory mediation models were not re-estimated in this sensitivity analysis. CI=confidence interval; CVD=cardiovascular disease; OR=odds ratio; SD=standard deviation.",
         r"\par}",
@@ -313,7 +315,7 @@ def main():
               "Status: approved for manuscript inclusion; the reproducible supporting-information table is S7_Table.tex.", "",
               f"The exported cohort includes {len(data):,} participants. Of {n_cases:,} CVD cases, {n_classified:,} have classified settings and {n_unclassified:,} ({100 * n_unclassified / n_cases:.2f}%) are unclassified: {n_unknown:,} other/unknown and {n_missing:,} missing setting. No additional upstream landmark exclusions were applied.", "",
               "## Steps associations", "",
-              "All estimates use the original M1 scale: 1 SD = 3298.822232 steps/day. Adjustment: age, sex, and the exported smoking and drinking codes; control is the outcome reference. Female sex, smoking code 0, and drinking code 0 are predictor references. Investigator-confirmed monthly-frequency cutpoints and source-mapping limitations are documented in S1 Text; the original source questions remain unavailable for independent verification.", "",
+              "All estimates use the original M1 scale: 1 SD = 3298.822232 steps/day. Adjustment: age, sex, recorded smoking status and drinking-frequency categories; control is the outcome reference. Female sex, documented never/non-smoker status, and never/monthly-or-less drinking are predictor references. Smoking concepts and upstream eligibility, grouped past-year drinking responses, and measurement definitions are documented in S1 Text.", "",
               "| Model | Contrast | OR (95% CI) | p |", "|---|---|---|---|"]
     for row in steps.itertuples():
         report.append(f"| {row.model} | {row.contrast} | {row.OR:.4f} ({row.CI_lower:.4f}, {row.CI_upper:.4f}) | {row.p_value:.4g} |")

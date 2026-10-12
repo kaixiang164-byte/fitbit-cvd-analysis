@@ -12,9 +12,13 @@ has been selected.
 
 ## Scope
 
-The workflow starts from a prepared participant-level cohort. It does not
-perform database extraction or upstream eligibility filtering. It contains
+The statistical workflow starts from a prepared participant-level cohort. It does not
+perform participant-data extraction or upstream eligibility filtering. It contains
 no participant data, notebook outputs, fitted-result exports or credentials.
+The endpoint is the setting of the first qualifying primary CVD record;
+primary diagnosis status is distinct from the chronological order of records.
+Baseline selection and the diagnosis-status exclusions already incorporated
+in the starting cohort are specified in [VARIABLES.md](VARIABLES.md).
 Restricted inputs and any participant-level intermediate files must remain
 inside the authorised All of Us Researcher Workbench. Independent researchers
 must obtain their own access through https://www.researchallofus.org/register/.
@@ -22,14 +26,30 @@ must obtain their own access through https://www.researchallofus.org/register/.
 See [VARIABLES.md](VARIABLES.md) for input fields, measurement windows and
 coding; [ENVIRONMENT.md](ENVIRONMENT.md) for dependencies and numerical settings;
 and [RUNNING.md](RUNNING.md) for execution order and output dependencies.
+Recorded smoking status is derived from `observation` records with
+`observation_concept_id = 4275495`; the status category is held in
+`value_as_concept_id`. The full binary mapping is given in the variable dictionary.
 Internal names such as `vulnerability`, `has_sleep_disorder`, `smoker` and
-`moderate/heavy` are retained for compatibility. Their scientific meanings are
+`drink_moderate`/`drink_heavy` are retained for compatibility; these last two
+keys represent drinking-frequency codes 1 and 2, not quantities. Their scientific meanings are
 defined in the variable dictionary rather than inferred from those names.
+
+`export_clinical_concepts.sql` prepares a Clinical component dictionary against
+the pinned CDR v8 `concept` and `concept_ancestor` tables. The 14 explicit
+non-lipid seeds include all descendants. The two lipid components instead
+require separately supplied, complete concept-ID sets; neither is inferred
+from the other, and the script does not expand those supplied sets. The output
+retains concept metadata, definition source and cross-component overlap. It reads no
+participant tables and does not construct participant flags, apply diagnosis
+dates, or reproduce upstream cohort extraction. Execution instructions and the
+non-lipid seeds and required lipid inputs are in [RUNNING.md](RUNNING.md) and
+[VARIABLES.md](VARIABLES.md).
 
 ## Analysis coverage
 
 | Component | Source / output role |
 | --- | --- |
+| Clinical component vocabulary dictionary | `export_clinical_concepts.sql`; non-lipid seeds plus descendants and separately supplied complete lipid sets, without participant records or counts |
 | Table 1 descriptive characteristics | `run_table1_descriptive.py`; documented row definitions, column-total percentages and sample SDs; see the validation scope below |
 | Primary M1, Steps-by-sex, pooled PCA and M2 | `run_primary_and_moderated_notebook_source.py`, primary stage: exported current notebook source cells and prerequisite input producers |
 | Unadjusted and adjusted Steps comparison (S15) | `run_crude_adjusted_steps_comparison.py`; identical classified sample and original Steps scale, full multinomial covariance, with reproduction of the saved M1 Steps estimates |
@@ -62,7 +82,8 @@ python -B -m unittest discover -v -p 'test_*.py'
 python -B validate_release.py
 ```
 
-Tests use synthetic data and mocked I/O. The inventory validator checks hashes,
+Tests use synthetic data, mocked I/O and static vocabulary-SQL contract checks;
+the latter do not execute BigQuery or verify a historical extraction. The inventory validator checks hashes,
 Python syntax and selected disclosure hazards; it is not proof of scientific
 validity or exhaustive privacy review. None of these checks reruns study data.
 See [VALIDATION.md](VALIDATION.md) for test coverage and

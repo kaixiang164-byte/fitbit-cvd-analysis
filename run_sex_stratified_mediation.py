@@ -37,18 +37,18 @@ MEDIATOR_TERMS = (
     "Intercept",
     "steps_z",
     "age_z",
-    "Current smoker",
-    "Moderate alcohol consumption",
-    "Heavy alcohol consumption",
+    "Recorded smoking",
+    "Drinking, 2-4/month or 2-3/week",
+    "Drinking, >=4/week",
 )
 OUTCOME_TERMS = (
     "Intercept",
     "steps_z",
     "vulnerability",
     "age_z",
-    "Current smoker",
-    "Moderate alcohol consumption",
-    "Heavy alcohol consumption",
+    "Recorded smoking",
+    "Drinking, 2-4/month or 2-3/week",
+    "Drinking, >=4/week",
 )
 
 _WORKER_DATA = None
@@ -859,4 +859,3 @@ def _parse_arguments() -> argparse.Namespace:
 
 if __name__ == "__main__":
     run_analysis(_parse_arguments())
-

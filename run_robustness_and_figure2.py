@@ -677,9 +677,9 @@ def fit_case_only_setting_sensitivity(data):
         "Mean daily Steps, per pooled SD",
         "Age, per pooled SD",
         "Male sex",
-        "Current smoker",
-        "Moderate alcohol consumption",
-        "Heavy alcohol consumption",
+        "Recorded smoking",
+        "Drinking, 2-4/month or 2-3/week",
+        "Drinking, >=4/week",
     )
     confidence_intervals = np.asarray(
         fitted.conf_int(alpha=0.05), dtype=float
@@ -1036,7 +1036,8 @@ def validate_canonical_code(manifest):
     Every accepted post-run source hash must have been separately reviewed;
     any subsequent unrecorded source edit still fails this guard. A documented
     Figure 2 labelling revision can replace only its three visual artifacts,
-    never a scientific CSV or other original analysis artifact.
+    never a scientific CSV or other original analysis artifact. Covariate-label
+    revisions must retain the previously reviewed visual replacements.
     """
     current_hash = sha256_file(__file__)
     run_hash = manifest["code_sha256"]
@@ -1057,6 +1058,8 @@ def validate_canonical_code(manifest):
                     "figure2-exposure-label-reporting-only",
                     "figure2-m1-label-reporting-only",
                     "figure2-reference-label-reporting-only",
+                    "smoking-status-label-reporting-only",
+                    "alcohol-frequency-label-reporting-only",
                 }
                 and revision.get("mediation_refitted") is False
                 and revision.get("fitted_results_unchanged") is True):
@@ -1081,6 +1084,34 @@ def validate_canonical_code(manifest):
             originals = revision.get("source_reporting_artifacts_sha256", {})
             if set(originals) != set(overrides):
                 raise RuntimeError("Reporting revision must retain every replaced original artifact hash.")
+            if revision.get("scope") in {
+                    "smoking-status-label-reporting-only",
+                    "alcohol-frequency-label-reporting-only"}:
+                alcohol_label_revision = revision.get("scope") == "alcohol-frequency-label-reporting-only"
+                previous_scopes = ({"smoking-status-label-reporting-only"}
+                                   if alcohol_label_revision else {
+                                       "figure2-exposure-label-reporting-only",
+                                       "figure2-m1-label-reporting-only",
+                                       "figure2-reference-label-reporting-only",
+                                   })
+                previous_reports = [
+                    item for item in manifest.get("post_run_code_revisions", [])
+                    if (item.get("revised_code_sha256") == revision.get("previous_reporting_code_sha256")
+                        and item.get("source_run_code_sha256") == run_hash
+                        and item.get("scope") in previous_scopes
+                        and item.get("mediation_refitted") is False
+                        and item.get("fitted_results_unchanged") is True
+                        and (not alcohol_label_revision or (
+                            item.get("participant_data_read") is False
+                            and item.get("reporting_artifacts_unchanged") is True)))
+                ]
+                if (len(previous_reports) != 1
+                        or revision.get("reporting_artifacts_unchanged") is not True
+                        or revision.get("participant_data_read") is not False
+                        or previous_reports[0].get("previous_reviewed_code_sha256") != revision.get("previous_reviewed_code_sha256")
+                        or previous_reports[0].get("source_reporting_artifacts_sha256") != originals
+                        or previous_reports[0].get("reporting_artifacts_sha256") != overrides):
+                    raise RuntimeError("Covariate-label revision must retain a unique reviewed reporting predecessor and its unchanged artifact hashes.")
             for filename, digest in overrides.items():
                 if originals[filename] != manifest["artifacts_sha256"].get(filename):
                     raise RuntimeError(f"Reporting revision original hash mismatch: {filename}.")

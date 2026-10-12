@@ -58,9 +58,13 @@ class Table1SyntheticTests(unittest.TestCase):
         drinking = summary.loc[summary.field.eq("is_drinker")]
         self.assertTrue(drinking.groupby("outcome")["count"].sum().eq(2).all())
         self.assertTrue(drinking.groupby("outcome").percent.sum().eq(100).all())
+        control = drinking.loc[drinking.outcome.eq("Control")].set_index("characteristic")
+        self.assertEqual(control.loc["Drinking, never/monthly or less", "count"], 1)
+        self.assertEqual(control.loc["Drinking, 2-4/month or 2-3/week", "count"], 1)
+        self.assertEqual(control.loc["Drinking, >=4/week", "count"], 0)
 
     def test_missing_classified_values_never_become_zero(self):
-        for field in ("has_sleep_disorder", "has_depression", "has_hypertension", "age", "is_drinker"):
+        for field in ("has_sleep_disorder", "has_depression", "has_hypertension", "age", "is_smoker", "is_drinker"):
             with self.subTest(field=field):
                 data = self.cohort.copy()
                 data.loc[0, field] = np.nan
@@ -75,7 +79,7 @@ class Table1SyntheticTests(unittest.TestCase):
         self.assertTrue(result.denominator.eq(2).all())
 
     def test_invalid_codes_ids_groups_and_counts_rejected(self):
-        for field, value in [("has_sleep_disorder", 2), ("is_drinker", 3),
+        for field, value in [("has_sleep_disorder", 2), ("is_smoker", 2), ("is_drinker", 3),
                              ("avg_steps", float("inf")), ("Group", "Unknown"),
                              ("sex_at_birth", "Unknown"), ("Onset_Type", "Other label"),
                              ("person_id", 100002), ("age", -1)]:
@@ -105,7 +109,21 @@ class Table1SyntheticTests(unittest.TestCase):
         self.assertIn(r"\shortstack{No recorded CVD\\($N=2$)}", rendered)
         self.assertIn(r"\shortstack{Acute care\\($N=2$)}", rendered)
         self.assertNotIn("Control", rendered)
-        self.assertIn(r"Smoking, $>3$/month", rendered)
+        self.assertIn("Recorded smoking", rendered)
+        self.assertIn("documented never-smoker and non-smoker concepts", rendered)
+        self.assertIn("smoking records are ignored when an eligible 0/1 record exists", rendered)
+        self.assertIn(r"the most recent eligible pre-$t_0$ record supplies the indicator", rendered)
+        self.assertIn("Participants with no eligible record and those with explicit former-smoker classifications were excluded upstream", rendered)
+        self.assertNotIn("missing smoking-status classifications were excluded upstream", rendered)
+        self.assertNotIn(r"Smoking, $>3$/month", rendered)
+        self.assertNotIn("Smoking and drinking frequencies", rendered)
+        self.assertIn("Drinking, never/monthly or less", rendered)
+        self.assertIn("Drinking, 2--4/month or 2--3/week", rendered)
+        self.assertIn(r"Drinking, $\geq4$/week", rendered)
+        self.assertIn("without monthly conversion", rendered)
+        self.assertNotIn("10$/month", rendered)
+        self.assertNotIn("Moderate alcohol consumption", rendered)
+        self.assertNotIn("Heavy alcohol consumption", rendered)
         self.assertIn(r"1 (50.0\%)", rendered)
         self.assertIn("Low sleep-efficiency indicator", rendered)
         self.assertNotIn("person_id", rendered)

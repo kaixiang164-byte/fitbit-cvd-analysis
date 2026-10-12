@@ -102,6 +102,113 @@ class Figure2ReportingProvenanceTests(unittest.TestCase):
         with self.assertRaisesRegex(RuntimeError, "only the three Figure 2"):
             self.validate()
 
+    def add_smoking_label_revision(self):
+        revision = copy.deepcopy(self.revision)
+        revision.update({
+            "scope": "smoking-status-label-reporting-only",
+            "previous_reporting_code_sha256": "reporting-source",
+            "revised_code_sha256": "smoking-source",
+            "participant_data_read": False,
+            "reporting_artifacts_unchanged": True,
+        })
+        self.manifest["post_run_code_revisions"].append(revision)
+        self.hashes[Path(analysis.__file__).name] = "smoking-source"
+        return revision
+
+    def test_accepts_smoking_label_revision_without_mutating_originals(self):
+        self.add_smoking_label_revision()
+        before = copy.deepcopy(self.manifest)
+        self.assertEqual(self.validate(), self.visuals)
+        self.assertEqual(self.manifest, before)
+
+    def test_smoking_label_revision_cannot_replace_visual_artifacts(self):
+        revision = self.add_smoking_label_revision()
+        revision["reporting_artifacts_sha256"]["Fig2.tif"] = "another-tif"
+        self.hashes["Fig2.tif"] = "another-tif"
+        with self.assertRaisesRegex(RuntimeError, "unchanged artifact hashes"):
+            self.validate()
+
+    def test_smoking_label_revision_requires_reviewed_visual_predecessor(self):
+        revision = self.add_smoking_label_revision()
+        revision["previous_reporting_code_sha256"] = "unreviewed-source"
+        with self.assertRaisesRegex(RuntimeError, "unique reviewed reporting predecessor"):
+            self.validate()
+
+    def test_smoking_label_revision_rejects_refit_and_scope_expansion(self):
+        revision = self.add_smoking_label_revision()
+        for field, value in (("mediation_refitted", True),
+                             ("fitted_results_unchanged", False),
+                             ("participant_data_read", True),
+                             ("reporting_artifacts_unchanged", False)):
+            with self.subTest(field=field):
+                previous = revision[field]
+                revision[field] = value
+                with self.assertRaises(RuntimeError):
+                    self.validate()
+                revision[field] = previous
+
+    def test_smoking_label_revision_keeps_diagnostic_integrity_check(self):
+        self.add_smoking_label_revision()
+        self.hashes["steps_spline_nonlinearity_test.csv"] = "changed-diagnostic"
+        with self.assertRaisesRegex(RuntimeError, "Corrected diagnostic artifact changed"):
+            self.validate()
+
+    def test_smoking_label_revision_rejects_scientific_csv_override(self):
+        revision = self.add_smoking_label_revision()
+        revision["reporting_artifacts_sha256"]["mediation_bootstrap_summary.csv"] = "new-summary"
+        with self.assertRaisesRegex(RuntimeError, "only the three Figure 2"):
+            self.validate()
+
+    def add_alcohol_label_revision(self):
+        smoking_revision = self.add_smoking_label_revision()
+        revision = copy.deepcopy(smoking_revision)
+        revision.update({
+            "scope": "alcohol-frequency-label-reporting-only",
+            "previous_reporting_code_sha256": "smoking-source",
+            "revised_code_sha256": "alcohol-source",
+        })
+        self.manifest["post_run_code_revisions"].append(revision)
+        self.hashes[Path(analysis.__file__).name] = "alcohol-source"
+        return revision
+
+    def test_accepts_alcohol_label_revision_without_mutating_originals(self):
+        self.add_alcohol_label_revision()
+        before = copy.deepcopy(self.manifest)
+        self.assertEqual(self.validate(), self.visuals)
+        self.assertEqual(self.manifest, before)
+
+    def test_alcohol_label_revision_requires_smoking_reporting_predecessor(self):
+        revision = self.add_alcohol_label_revision()
+        revision["previous_reporting_code_sha256"] = "reporting-source"
+        with self.assertRaisesRegex(RuntimeError, "unique reviewed reporting predecessor"):
+            self.validate()
+
+    def test_alcohol_label_revision_cannot_replace_visual_artifacts(self):
+        revision = self.add_alcohol_label_revision()
+        revision["reporting_artifacts_sha256"]["Fig2.tif"] = "another-tif"
+        self.hashes["Fig2.tif"] = "another-tif"
+        with self.assertRaisesRegex(RuntimeError, "unchanged artifact hashes"):
+            self.validate()
+
+    def test_alcohol_label_revision_rejects_scientific_csv_override(self):
+        revision = self.add_alcohol_label_revision()
+        revision["reporting_artifacts_sha256"]["mediation_bootstrap_summary.csv"] = "new-summary"
+        with self.assertRaisesRegex(RuntimeError, "only the three Figure 2"):
+            self.validate()
+
+    def test_alcohol_label_revision_requires_source_only_predecessor(self):
+        self.add_alcohol_label_revision()
+        previous = self.manifest["post_run_code_revisions"][-2]
+        previous["reporting_artifacts_unchanged"] = False
+        with self.assertRaisesRegex(RuntimeError, "unique reviewed reporting predecessor"):
+            self.validate()
+
+    def test_alcohol_label_revision_keeps_diagnostic_integrity_check(self):
+        self.add_alcohol_label_revision()
+        self.hashes["steps_spline_nonlinearity_test.csv"] = "changed-diagnostic"
+        with self.assertRaisesRegex(RuntimeError, "Corrected diagnostic artifact changed"):
+            self.validate()
+
     def test_rejects_unreviewed_source(self):
         self.hashes[Path(analysis.__file__).name] = "unreviewed-source"
         with self.assertRaisesRegex(RuntimeError, "without a recorded"):

@@ -2,7 +2,7 @@
 
 ## Current checks
 
-On 2026-10-07, using Python 3.9.25 and the dependencies documented in
+On 2026-10-12, using Python 3.9.25 and the dependencies documented in
 [ENVIRONMENT.md](ENVIRONMENT.md):
 
 ```bash
@@ -10,13 +10,14 @@ python3 -B -m unittest discover -v -p 'test_*.py'
 python3 -B run_primary_and_moderated_notebook_source.py --verify-sources
 ```
 
-All **71 synthetic or mocked-input tests passed**. All seven embedded notebook
+All **91 synthetic, mocked-input or static-contract tests passed**. All seven embedded notebook
 source-cell hashes and syntax checks passed. No participant data were used.
 
 ## Test coverage
 
 | Component | Checks |
 | --- | --- |
+| Clinical vocabulary export | Fourteen non-lipid seeds and their descendant expansion; two required, nonempty lipid concept arrays without implicit expansion; within-component deduplication, cross-component overlap, definition-source labels, missing-concept assertions and vocabulary-only scope; eight static checks without BigQuery execution |
 | Primary-model wrapper | Synthetic M1/PCA/M2/pathway execution; embedded source integrity; output-directory isolation; compatibility with the sex/setting branches |
 | Pooled decomposition | Probability-scale decomposition and shared-denominator identities; pooled score scaling; deterministic synthetic resamples |
 | Steps and age splines | Design rank and parameter counts; likelihood/AIC identities; linear-reference agreement; case-only scaling; nonconvergence checks |

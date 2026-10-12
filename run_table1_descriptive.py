@@ -32,10 +32,10 @@ REQUIRED_COLUMNS = (
 ROWS = (
     ("pre_t0", "age", "Age at t0, years", None),
     ("pre_t0", "sex_at_birth", "Female sex", "Female"),
-    ("pre_t0", "is_smoker", "Smoking, >3/month", 1),
-    ("pre_t0", "is_drinker", "Drinking, <=1/month", 0),
-    ("pre_t0", "is_drinker", "Drinking, >1 to 10/month", 1),
-    ("pre_t0", "is_drinker", "Drinking, >10/month", 2),
+    ("pre_t0", "is_smoker", "Recorded smoking", 1),
+    ("pre_t0", "is_drinker", "Drinking, never/monthly or less", 0),
+    ("pre_t0", "is_drinker", "Drinking, 2-4/month or 2-3/week", 1),
+    ("pre_t0", "is_drinker", "Drinking, >=4/week", 2),
     ("pre_t0", "avg_steps", "Mean daily step count during [t0-12m,t0)", None),
     ("mediator_month", "has_sleep_disorder", "Low sleep-efficiency indicator", 1),
     ("mediator_month", "has_depression", "Self-reported depression diagnosis", 1),
@@ -139,10 +139,8 @@ def render_table1_tex(summary, metadata):
     }
     labels = {
         "Age at t0, years": r"Age at $t_0$, years",
-        "Smoking, >3/month": r"Smoking, $>3$/month",
-        "Drinking, <=1/month": r"Drinking, $\leq1$/month",
-        "Drinking, >1 to 10/month": r"Drinking, $>1$ to $10$/month",
-        "Drinking, >10/month": r"Drinking, $>10$/month",
+        "Drinking, 2-4/month or 2-3/week": "Drinking, 2--4/month or 2--3/week",
+        "Drinking, >=4/week": r"Drinking, $\geq4$/week",
         "Mean daily step count during [t0-12m,t0)": r"Mean daily step count during $[t_0-12m,t_0)$",
         "Mental burden score, 0-2": "Mental burden score, 0--2",
         "Clinical burden score, 0-5": "Clinical burden score, 0--5",
@@ -176,7 +174,8 @@ def render_table1_tex(summary, metadata):
         r"\bottomrule", r"\end{tabularx}", r"\begin{minipage}{\textwidth}", r"\footnotesize",
         r"Data are mean (sample SD) or n (\%). Percentages use the full column total; missing required values are not recoded as absence. "
         r"Mental sums depression/anxiety survey indicators; Clinical sums five recorded diagnosis indicators. "
-        r"Smoking and drinking frequencies are occasions per month. Source-variable definitions are given in S1 Text. "
+        r"Recorded smoking denotes moderate, heavy, daily, occasional or unspecified smoker concepts; the reference combines documented never-smoker and non-smoker concepts. "
+        r"Unknown, no-information and missing pre-$t_0$ smoking records are ignored when an eligible 0/1 record exists; the most recent eligible pre-$t_0$ record supplies the indicator. Participants with no eligible record and those with explicit former-smoker classifications were excluded upstream. Drinking groups combine past-year frequency responses without monthly conversion; missing or indeterminate responses were excluded upstream. The drinking reference is never/monthly or less, not lifetime abstinence. Source-variable definitions are given in S1 Text. "
         r"CVD=cardiovascular disease.", r"\end{minipage}", r"\end{table}",
     ]
     return "\n".join(lines) + "\n"

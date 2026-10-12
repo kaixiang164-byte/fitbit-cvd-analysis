@@ -144,7 +144,7 @@ not estimates of their true settings. Full methods are provided in S1 Text,
 Each scenario included 8747 participants: the original 8292 M1 participants
 (5780 participants without recorded CVD, 2127 outpatient and 385 acute-care cases) plus 455 cases with
 missing settings. The 148 cases labelled Other/Unknown remained excluded.
-The adjustment variables (age, sex, smoking frequency and drinking frequency)
+The adjustment variables (age, sex, recorded smoking status and drinking frequency)
 and original Steps standardisation (SD 3298.82 steps/day) were unchanged.
 
 For each missing-setting case, the hypothetical acute probability was

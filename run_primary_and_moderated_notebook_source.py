@@ -26,10 +26,18 @@ directory, required by separate downstream scripts. Keep all runtime outputs
 within the authorized data environment and out of the code release.
 A fresh output directory outside this code directory is required.
 
-Historical output labels such as "Smoker vs nonsmoker", "Moderate", "Heavy",
-and "Vulnerability" are preserved to retain source provenance. The manuscript
-defines smoking/drinking codes as occasions-per-month groups; those labels do
-not establish abstinence, consumption quantity, or a validated latent trait.
+Recorded smoking status compares documented smoker concepts with
+never/non-smoker concepts. Unknown, no-information and missing pre-t0 records
+are ignored when an eligible 0/1 smoking record exists; the most recent eligible
+pre-t0 record supplies the indicator. Participants with no eligible record and
+those with explicit former-smoker classifications are excluded upstream.
+Alcohol-use frequency categories
+are 0 = never or monthly or less; 1 = 2-4 times/month or 2-3 times/week;
+2 = at least four times/week. Missing or indeterminate frequency information
+is excluded upstream. Category 0 is the reference. Alcohol categories describe
+past-year frequency, not quantity or a validated AUDIT-C risk score.
+The internal Vulnerability variable is a pooled PCA health-burden score,
+not a validated latent trait.
 Cell 13's historical coefficient-attenuation export does not establish
 mediation; the current manuscript uses probability-scale decompositions.
 The source cells do not implement Table 1 or the upstream cohort extraction.
@@ -54,11 +62,11 @@ import uuid
 
 SOURCE_NOTEBOOK = "fitbit_analyis.ipynb"
 SOURCE_CELL_SHA256 = {
-    2: "6ee4110120dbfb626135cdd9640c4bca10e5d4fb5394e8fa96b05443192aa06f",
+    2: "db99203fee35a879ad010fccdf59265e56ab8f49de38f5f7fe07726c86b3c948",
     7: "1067c565e4460e1fb68ab430d46c33c9fa70189b9957b4005bc16427f9f5517d",
     9: "089f172e854c065c307a06086b22bfd02211399f8d5266f09e798ca0466b6208",
     11: "17b748c0791c6c3f5d718e1164d7140a667efe50ee132ea6d87fc2a2813fcf9b",
-    13: "0835d7d0503e8983bdf9a9365366ae7fc12a9d1695310dd511c057ecd4bafee4",
+    13: "5bdb7e8ce5b3b9007c60463a59809dd6e6f7a2084a6f9a57bd20ae5509ced4a2",
     18: "dc353adf69360fb19601eb361bb4f8945204107ab0ebeb85917543ae620b20c8",
     20: "e4a91db17b3ee6f93662ba4186cec8013aa2fb9db68a36315d9fad6eceb10568"
 }
@@ -170,9 +178,9 @@ term_labels = {
     "steps_z": "Steps (per 1 SD)",
     "age_z": "Age (per 1 SD)",
     "C(sex_at_birth)[T.Male]": "Male vs Female",
-    "C(is_smoker)[T.1]": "Smoker vs nonsmoker",
-    "C(is_drinker)[T.1]": "Moderate vs nondrinker",
-    "C(is_drinker)[T.2]": "Heavy vs nondrinker",
+    "C(is_smoker)[T.1]": "Recorded smoker vs never/non-smoker",
+    "C(is_drinker)[T.1]": "Alcohol frequency category 1 vs 0",
+    "C(is_drinker)[T.2]": "Alcohol frequency category 2 vs 0",
 }
 
 def coefficient_position(term, outcome_column):
@@ -567,9 +575,9 @@ m2_term_labels = {
     "vulnerability": "Vulnerability PC1 (per 1 SD)",
     "age_z": "Age (per 1 SD)",
     "C(sex_at_birth)[T.Male]": "Male vs Female",
-    "C(is_smoker)[T.1]": "Smoker vs nonsmoker",
-    "C(is_drinker)[T.1]": "Moderate vs nondrinker",
-    "C(is_drinker)[T.2]": "Heavy vs nondrinker",
+    "C(is_smoker)[T.1]": "Recorded smoker vs never/non-smoker",
+    "C(is_drinker)[T.1]": "Alcohol frequency category 1 vs 0",
+    "C(is_drinker)[T.2]": "Alcohol frequency category 2 vs 0",
 }
 
 def extract_multinomial_pairwise(fit, model_name, term_labels):

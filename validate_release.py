@@ -11,7 +11,7 @@ import zipfile
 
 ROOT = Path(__file__).resolve().parent
 MANIFEST = "release_manifest.json"
-SAFE_SUFFIXES = {".py", ".md", ".txt", ".json", ".cff"}
+SAFE_SUFFIXES = {".py", ".sql", ".md", ".txt", ".json", ".cff"}
 SECRET_PATTERNS = (
     re.compile(r"\b(?:ghp_|github_pat_|olp_)[A-Za-z0-9_]{20,}"),
     re.compile(r"-----BEGIN (?:RSA |EC |OPENSSH )?PRIVATE KEY-----"),

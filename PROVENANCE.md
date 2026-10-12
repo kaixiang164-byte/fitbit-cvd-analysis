@@ -22,7 +22,8 @@ than the optional random-assignment scenario intervals.
 
 `run_robustness_and_figure2.py` includes the Steps spline rank correction and
 Figure 2 labels identifying the fixed exposure contrast, M1 probabilities and
-the no-recorded-CVD reference group.
+the no-recorded-CVD reference group, together with recorded-smoking-status and
+past-year drinking-frequency labels.
 Its source therefore differs from the earlier canonical bootstrap run.
 Run manifests distinguish fitted-output provenance from reporting changes.
 Each authorised run creates its own manifest; historical hashes must not be
@@ -32,14 +33,15 @@ overwritten to bypass a mismatch.
 
 `run_primary_and_moderated_notebook_source.py` embeds only the source text of
 zero-based cells 2, 7, 9, 11, 13, 18 and 20 from `fitbit_analyis.ipynb`.
-It records each original cell's hash, verifies it before execution, and provides
+It records each embedded source cell's hash, verifies it before execution, and provides
 explicit primary/pathways/moderation stages. The notebook installation magic
 is removed; presentation-only IPython display is routed to ordinary printing.
 The prepared CSV path and working directory are explicit. No notebook JSON,
 saved outputs or original participant inputs are distributed.
 
-The source cells retain historical labels and a descriptive coefficient-change
-export, which is not a reported mediation result. Coefficient attenuation does
+Smoking is a recorded-status indicator, and drinking is a three-category
+past-year frequency variable. The source cells retain a descriptive
+coefficient-change export, which is not a reported mediation result. Coefficient attenuation does
 not establish mediation. The variable dictionary defines measurement and
 interpretation terms.
 

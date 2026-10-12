@@ -12,6 +12,51 @@ small arbitrary synthetic CSVs cannot replace the study input in the canonical
 pooled CLI. The extracted primary/pathway notebook cells are also exercised on
 manufactured cohorts by tests and do not enforce the manuscript's exact counts.
 
+## Vocabulary-only Clinical dictionary export
+
+Replace every `PROJECT.DATASET` placeholder in `export_clinical_concepts.sql`
+with the exact dataset identifier for the pinned CDR v8 release; do not
+substitute a newer vocabulary release. Submit the complete Standard SQL script
+in an authorised Workbench BigQuery session with two required named query
+parameters, both of type `ARRAY<INT64>`:
+
+- `hyperlipidaemia_concept_ids`: the complete operational hyperlipidaemia set.
+- `high_cholesterol_concept_ids`: the complete operational high-cholesterol set.
+
+Supply the actual complete matching sets, not an assumed expansion of reference
+concepts 432867 or 437827. The script does not derive one lipid set from the
+other or expand either lipid parameter through the hierarchy. Null or empty
+arrays and null entries are rejected. Both lipid indicators are separately
+coded and may overlap; neither is inferred from the other.
+
+The script reads only `concept` and `concept_ancestor` and uses temporary tables.
+The 14 explicit non-lipid seeds are expanded to all descendants. All components
+are deduplicated within component, with cross-component membership retained.
+The output distinguishes non-lipid seed/descendant membership from supplied
+lipid membership using `definition_source`, and marks direct inclusions with
+`is_explicit_inclusion`. It does not apply a
+diagnosis-status restriction or filter by standard status, domain, or validity;
+these metadata are displayed in the final result.
+
+The script fails if any seed, including `443238`, is absent from the selected
+dictionary, or if an included descendant or supplied lipid concept lacks a
+`concept` row. Resolve such
+failures against the selected CDR v8 vocabulary; do not remove the seed or
+silently change versions to obtain a result. Export the final result table as
+a CSV dictionary, retaining its component and concept-ID columns. The output
+contains vocabulary metadata only, not participant identifiers or counts.
+Record the CDR dataset identifier, both supplied lipid arrays and code commit
+with that dictionary.
+
+This query does not select dated clinical records, construct participant-level
+flags, or run models. Its static unit tests check the specified non-lipid seeds,
+required lipid inputs and
+query contract, not execution against BigQuery or historical study results:
+
+```bash
+python -B -m unittest -v test_clinical_concept_export
+```
+
 ## 1. Primary models and prerequisite exports
 
 Table 1 can be generated independently from the same prepared cohort, without

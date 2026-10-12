@@ -119,7 +119,7 @@ def build_designs(data, scales):
     adjusted = crude.copy()
     adjusted["age_z"] = (data.age - scales["age_mean"]) / scales["age_SD"]
     adjusted["sex_male"] = data.sex_at_birth.eq("Male").astype(float)
-    adjusted["smoking_frequency_1"] = data.is_smoker.eq(1).astype(float)
+    adjusted["recorded_smoking_1"] = data.is_smoker.eq(1).astype(float)
     adjusted["drinking_frequency_1"] = data.is_drinker.eq(1).astype(float)
     adjusted["drinking_frequency_2"] = data.is_drinker.eq(2).astype(float)
     for design in [crude, adjusted]:
@@ -261,7 +261,7 @@ Comparison & OR (95\% CI) & $p$ & OR (95\% CI) & $p$ \\
         f"{int(first.n_outpatient)} outpatient and {int(first.n_acute)} acute-care cases. "
         f"The original pooled Steps SD was {first.steps_SD:.2f} steps/day. "
     ) + r"""The unadjusted model included Steps only; M1 additionally included linear
-standardised age, sex at birth, smoking frequency and drinking frequency.
+standardised age, sex at birth, recorded smoking status and drinking frequency.
 The acute-care-versus-outpatient contrast was calculated from each fitted
 multinomial model using the full covariance between its outcome equations,
 not by comparing the significance of two estimates using no recorded CVD as the reference.
