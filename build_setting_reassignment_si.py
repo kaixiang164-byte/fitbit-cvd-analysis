@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import argparse
 import csv
+import io
 import json
 import math
 from pathlib import Path
@@ -19,8 +20,10 @@ import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 from matplotlib.colors import TwoSlopeNorm
+from matplotlib.font_manager import fontManager
 from matplotlib.patches import Rectangle
 import numpy as np
+from PIL import Image
 
 
 CONTRASTS = ("Outpatient vs control", "Acute vs control", "Acute vs outpatient")
@@ -180,10 +183,13 @@ def make_figure(scenarios, directory):
     allocations = sorted({row["allocation_OR_per_steps_SD"] for row in grid})
     lookup = {(row["acute_fraction"], row["allocation_OR_per_steps_SD"]): row for row in grid}
     values = np.array([[lookup[q, allocation]["OR"] for allocation in allocations] for q in qs])
-    plt.rcParams.update({"font.family": "DejaVu Sans", "font.size": 11,
+    installed_fonts = {font.name for font in fontManager.ttflist}
+    font_family = next(font for font in ("Arial", "Nimbus Sans", "DejaVu Sans")
+                       if font in installed_fonts)
+    plt.rcParams.update({"font.family": font_family, "font.size": 9,
                          "pdf.fonttype": 42, "ps.fonttype": 42})
-    fig = plt.figure(figsize=(10.6, 8.6), facecolor="white")
-    ax = fig.add_axes([0.155, 0.24, 0.725, 0.615])
+    fig = plt.figure(figsize=(7.48, 6.6), facecolor="white")
+    ax = fig.add_axes([0.15, 0.245, 0.705, 0.60])
     span = float(np.abs(np.log(values)).max())
     norm = TwoSlopeNorm(vmin=-span, vcenter=0, vmax=span)
     cmap = plt.get_cmap("RdBu_r")
@@ -191,9 +197,9 @@ def make_figure(scenarios, directory):
     ax.set_xticks(range(len(allocations)), [f"{value:g}" for value in allocations])
     q_labels = ["15.3%" if math.isclose(q, REFERENCE_Q) else f"{q * 100:g}%" for q in qs]
     ax.set_yticks(range(len(qs)), q_labels)
-    ax.tick_params(axis="both", length=0, pad=9, labelsize=11)
-    ax.set_xlabel("Assumed allocation OR per 1-SD higher Steps", labelpad=12, fontsize=12)
-    ax.set_ylabel("Assumed acute fraction among missing-setting cases", labelpad=10, fontsize=12)
+    ax.tick_params(axis="both", length=0, pad=7, labelsize=9)
+    ax.set_xlabel("Assumed allocation OR per 1-SD higher Steps", labelpad=10, fontsize=9)
+    ax.set_ylabel("Assumed acute fraction among missing-setting cases", labelpad=8, fontsize=9)
     ax.set_xticks(np.arange(-0.5, len(allocations), 1), minor=True)
     ax.set_yticks(np.arange(-0.5, len(qs), 1), minor=True)
     ax.grid(which="minor", color="white", linewidth=1.5)
@@ -207,36 +213,48 @@ def make_figure(scenarios, directory):
             luminance = sum(coefficient * value for coefficient, value in zip((0.2126, 0.7152, 0.0722), rgb))
             color = "white" if luminance < 0.48 else "#152536"
             ax.text(j, i - 0.12, f'{row["OR"]:.3f}', ha="center", va="center",
-                    color=color, fontsize=12.8, fontweight="bold")
+                    color=color, fontsize=10, fontweight="bold")
             ax.text(j, i + 0.20,
                     f'({row["sampling_lower"]:.3f}\u2013{row["sampling_upper"]:.3f})',
-                    ha="center", va="center", color=color, fontsize=10)
+                    ha="center", va="center", color=color, fontsize=8)
     reference_row = min(range(len(qs)), key=lambda i: abs(qs[i] - REFERENCE_Q))
     reference_col = allocations.index(1.0)
     ax.add_patch(Rectangle((reference_col - .48, reference_row - .48), .96, .96,
                            fill=False, edgecolor="#182332", linewidth=1.5))
-    cax = fig.add_axes([.90, .24, .023, .615])
+    cax = fig.add_axes([.88, .245, .022, .60])
     ticks = np.log([.6, .8, 1., 1.2, 1.6])
     cbar = fig.colorbar(im, cax=cax, ticks=ticks)
     cbar.ax.set_yticklabels(["0.6", "0.8", "1.0", "1.2", "1.6"])
-    cbar.set_label("Fitted Steps OR (log colour scale)", labelpad=11)
+    cbar.set_label("Fitted Steps OR (log colour scale)", labelpad=7, fontsize=9)
     cbar.outline.set_visible(False)
-    fig.text(.155, .947, "Acute-care versus outpatient recording", fontsize=17, fontweight="bold")
-    fig.text(.155, .907, "Hypothetical settings for 455 cases; M1 covariates and Steps scale unchanged",
-             fontsize=11.5, color="#435063")
+    fig.text(.15, .947, "Acute-care versus outpatient recording", fontsize=12, fontweight="bold")
+    fig.text(.15, .907, "Hypothetical settings for 455 cases; M1 covariates and Steps scale unchanged",
+             fontsize=9, color="#435063")
     endpoint_rows = {row["scenario_id"]: row for row in rows if row["acute_fraction"] in (0, 1)}
-    fig.text(.155, .117,
+    fig.text(.15, .117,
              "All 455 outpatient: " + interval(endpoint_rows["all_outpatient"], tex=False),
-             fontsize=11.5, color="#152536")
-    fig.text(.155, .076,
+             fontsize=9, color="#152536")
+    fig.text(.15, .076,
              "All 455 acute care: " + interval(endpoint_rows["all_acute"], tex=False),
-             fontsize=11.5, color="#152536")
-    fig.text(.155, .027, "Cells: fitted Steps OR (scenario-conditional bootstrap 95% CI); N = 8,747.",
-             fontsize=10.5, color="#435063")
+             fontsize=9, color="#152536")
+    fig.text(.15, .027, "Cells: fitted Steps OR (scenario-conditional bootstrap 95% CI); N = 8,747.",
+             fontsize=8.5, color="#435063")
     fig.savefig(directory / f"{PLOT_STEM}.pdf", metadata={"Title": "Fig 3: Missing-setting allocation sensitivity"})
     fig.savefig(directory / f"{PLOT_STEM}.png", dpi=200)
-    fig.savefig(directory / "Fig3.tif", dpi=600,
-                pil_kwargs={"compression": "tiff_lzw"})
+    # Render at the submission size; flatten transparency before TIFF export.
+    with io.BytesIO() as raster:
+        fig.savefig(raster, format="png", dpi=600, facecolor="white", transparent=False)
+        raster.seek(0)
+        with Image.open(raster) as rendered:
+            rgb = rendered.convert("RGB")
+            rgb.save(directory / "Fig3.tif", dpi=(600, 600), compression="tiff_lzw")
+    with Image.open(directory / "Fig3.tif") as exported:
+        x_dpi, y_dpi = exported.info["dpi"]
+        if (exported.mode != "RGB" or exported.info.get("compression") != "tiff_lzw"
+                or not 300 <= x_dpi <= 600 or not 300 <= y_dpi <= 600
+                or exported.width / x_dpi * 2.54 > 19.05
+                or exported.height / y_dpi * 2.54 > 22.23):
+            raise ValueError("Figure 3 TIFF does not meet submission export specifications.")
     plt.close(fig)
 
 
