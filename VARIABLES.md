@@ -28,8 +28,20 @@ compatibility and are not clinical diagnoses unless explicitly stated.
 - The same classified cohort of 8,292 is used for primary association and exploratory mediation analyses:
   5,780 Control, 2,127 Outpatient, 385 Acute. A four-category sensitivity retains
   the additional 603 CVD cases with unclassified setting (148 other/unknown,
-  455 missing setting). These counts are validation targets, not filters that
+  455 missing setting). Supplementary binary models combine all qualifying CVD
+  recordings within the 8,292- and 8,895-person cohorts (2,512 and 3,115 cases,
+  respectively), retaining the same 5,780 participants without recorded CVD.
+  Neither model assigns a setting to an unclassified case. These counts are validation targets, not filters that
   reconstruct the historical selection.
+- S7 descriptive summaries retain four distinct case groups: Outpatient,
+  Acute care, Missing setting, and Other/unknown. Missing setting denotes a
+  missing `Onset_Type` among CVD cases, whereas Other/unknown is the retained
+  explicit label; neither identifies the source of classification failure.
+  Each unclassified subgroup is compared with pooled classified cases using
+  standardised mean differences. The allocation sensitivity includes only the
+  455 missing-setting cases, while the four-category and expanded binary models
+  include all 603 unclassified cases. Disclosure-protected table cells are
+  suppressed, not zero or missing participant measurements.
 - Upstream eligibility includes at least 7 valid main-sleep days in `[t0,tM)`
   and complete depression/anxiety responses; missing responses or inadequate
   sleep coverage are not encoded as zero. EHR endpoint coverage was required.
@@ -227,6 +239,7 @@ scripts consume the five prepared binary indicators.
 | Derived variable | Definition |
 | --- | --- |
 | `Outcome_Status` | 0 Control, 1 Outpatient, 2 Acute care in the classified cohort. The four-category sensitivity retains all 603 unclassified cases; the allocation sensitivity adds the 455 missing-setting cases under hypothetical assignments and excludes the 148 other/unknown cases. |
+| `any_cvd` | Binary endpoint derived from `Group`: 1 for every qualifying primary CVD case (`Heart Disease`), including missing or other/unknown setting, and 0 for `Control` (no recorded CVD). Fitted separately in the nested 8,292- and 8,895-person cohorts, using the same original standardisation and covariate definitions. |
 | `steps_z`, `age_z` | Pooled classified-cohort mean/SD standardization; sample SD (`ddof=1`). Fixed original scales are used in bootstrap contrasts. |
 | `Sleep` | `has_sleep_disorder`. |
 | `Mental` | `has_depression + has_anxiety`, range 0-2. |

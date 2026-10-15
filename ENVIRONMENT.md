@@ -26,6 +26,13 @@ code properties, not independent reproduction of the study's cohort or results.
 ## Numerical settings
 
 - Fixed original pooled Steps and age standardization (`ddof=1`).
+- S7 binary any-CVD models use that same scaling in both nested cohorts,
+  maximum-likelihood logistic regression and Wald 95% confidence intervals;
+  no bootstrap or random setting assignment is used for these estimates.
+- S7 descriptive SDs use `ddof=1`; Steps quartiles use linear interpolation.
+  Subgroup-versus-classified SMDs use the square root of the mean of the two
+  sample variances for continuous variables and of the two Bernoulli
+  variances for binary indicators. Quartiles are not confidence intervals.
 - Pooled bootstrap: 2,000 draws, seed 20260903, 51 residual nodes; the three
   score definitions use identical resampled participant positions. Point
   estimates are checked with 101 nodes. M1 probability bands use 500 coefficient

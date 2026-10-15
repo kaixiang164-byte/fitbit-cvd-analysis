@@ -2,7 +2,7 @@
 
 ## Current checks
 
-On 2026-10-12, using Python 3.9.25 and the dependencies documented in
+On 2026-10-15, using Python 3.9.25 and the dependencies documented in
 [ENVIRONMENT.md](ENVIRONMENT.md):
 
 ```bash
@@ -10,7 +10,7 @@ python3 -B -m unittest discover -v -p 'test_*.py'
 python3 -B run_primary_and_moderated_notebook_source.py --verify-sources
 ```
 
-All **91 synthetic, mocked-input or static-contract tests passed**. All seven embedded notebook
+All **105 synthetic, mocked-input or static-contract tests passed**. All seven embedded notebook
 source-cell hashes and syntax checks passed. No participant data were used.
 
 ## Test coverage
@@ -22,6 +22,8 @@ source-cell hashes and syntax checks passed. No participant data were used.
 | Pooled decomposition | Probability-scale decomposition and shared-denominator identities; pooled score scaling; deterministic synthetic resamples |
 | Steps and age splines | Design rank and parameter counts; likelihood/AIC identities; linear-reference agreement; case-only scaling; nonconvergence checks |
 | Missing-setting allocation | Weighted calibration; endpoint scenarios; fractional multinomial parameters and full covariance against statsmodels; repeated-row equivalence; finite-difference derivatives; stable extreme logits |
+| Binary any-CVD recording | Nested-cohort construction; retention of all unclassified cases as CVD recordings; fixed original scaling and categorical covariates; logistic/binomial-GLM agreement; count and missingness checks; aggregate table rendering; eight synthetic tests |
+| Recording-setting descriptives | Four-group case partition; means, sample SDs and linearly interpolated Steps quartiles; SMDs against the pooled classified reference; separate handling of suppressed cells and non-applicable median SMDs; complementary suppression of counts, percentages and SMDs; six synthetic tests |
 | Unadjusted/adjusted comparison | Identical rows and fixed scaling; direct multinomial agreement; cross-logit covariance; reference reproduction; invalid-input rejection; S15 rendering |
 | Table 1 | Sample SDs; derived scores; full-column percentage denominators; missing/invalid input rejection; unclassified-setting exclusion; aggregate-only output; LaTeX rendering |
 | Reporting provenance | Accepted source/artifact hash chains; rejection of altered numerical exports, mismatched originals and unreviewed source changes |

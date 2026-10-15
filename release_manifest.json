@@ -9,17 +9,17 @@
   "scope": "Downstream analysis from a prepared cohort plus a vocabulary-only Clinical dictionary exporter; no participant data or participant-extraction implementation.",
   "verification": {
     "tests": "Synthetic, mocked-input and static-contract checks only; see VALIDATION.md.",
-    "study_data_refitted": false,
-    "repository_version": "The current Git commit identifies this source version; the earlier public commit is recorded separately."
+    "repository_version": "The current Git commit identifies this source version; the earlier public commit is recorded separately.",
+    "full_study_data_rerun": false
   },
   "files_sha256": {
     ".gitignore": "191951fccfc59009196506c191aca14b37c244066f67ca2f2923f41019b8e279",
-    "ENVIRONMENT.md": "f26a411184b9f3d10542cdca17686f9cac0a89146c8363af4b6057e73793e4b0",
+    "ENVIRONMENT.md": "b28739b28a48f0651924fb6ea910ace4afa2e060ef47c07f6356f529b1debf04",
     "PROVENANCE.md": "563a61e50ce30505f4660cf14a5b0690d544fbf1750ac88c9006bdf1d96174f2",
-    "README.md": "6b41327cd1a3fc85e4f9aacf27ca8596f906da15c86f1de59e9c82dfd0e6b373",
-    "RUNNING.md": "e19b29217be24ad9ed0b605c7af64281533594a3051437c377b744482f661b7a",
-    "VALIDATION.md": "a07a2ffe84e3650dac87224d87198914343c738836590b81b0d41868706e44e0",
-    "VARIABLES.md": "31ef9f70b4df2eccb0e220622aa9229414606d5b8f8e9946d5c4d204db1bdb1f",
+    "README.md": "34096a90e133119c4e7f0efc79d91654a06de07627aa8fa51fa9d2196a12145e",
+    "RUNNING.md": "d73c60c12c29db19696c1c62d4a306dcf13f965633e6f989506349364ec2b4ca",
+    "VALIDATION.md": "a35390b619cf8a7e73d00face2aa700e0accae7d4bff8e7e9e0f0dc0fb644cae",
+    "VARIABLES.md": "808fed6694f28abd11e80fcf58091e73973801921b81c6f6c17696ecc8161b86",
     "build_setting_reassignment_si.py": "8fd3396ace4569849e22714fa96476d187d55030384f0e24c63d501fdaca8022",
     "export_clinical_concepts.sql": "e4f72a94172dec0322eeb96350dbbd413ad56b5638d3e01f847fa99b66017b5a",
     "prepare_age_reference.py": "e7bca9d372a598d03b3c2fea6f1c09656c99ee943f0eecd40424418aafe90cd0",
@@ -34,7 +34,7 @@
     "run_sex_stratified_mediation.py": "2656fddc98425e47b405270687ecf81940f6a767f676fc7619f16900d2832e9e",
     "run_sleep_omission_sensitivity.py": "aa9633ddee362b3222b6ce92445e5c4b6e953fed11f68ddc19a332aa9d8ae99a",
     "run_table1_descriptive.py": "a3d0b5c9769aaec58734a9f85e4ca4804350c21f92d5577e39df7a74151b2427",
-    "run_unclassified_setting_sensitivity.py": "85d849c315b7d0418b64d9d4cb34dca80872b145c095d4e143228448901b4481",
+    "run_unclassified_setting_sensitivity.py": "a7b8cf837cb06e0ee7637935c46c41882dc0b3895e248966968ec2dcc6bc7162",
     "test_age_adjustment_sensitivity.py": "01995ecd75d866dbb7a4d2c85e4a30a7d6d480b7fb154b31d5c9cc551d4088cb",
     "test_clinical_concept_export.py": "773c656a04c3ccdcef75570aacbddae561d9aa9e387423854c01a76e53fa1403",
     "test_crude_adjusted_steps_comparison.py": "4373fe4e4e289946a3a6df439b1bc48abab3dbc9a43b012aea60175f0b731afd",
@@ -44,13 +44,14 @@
     "test_setting_reassignment_sensitivity.py": "e145786cdb9d386948283f7ccc756faeb33e4cd10b48dc6f14a5ab9834957762",
     "test_steps_spline_diagnostic.py": "cf90b442dce12a1205af02b8355ee0f797445fdf570826220f1e4706c2cfdd5a",
     "test_table1_descriptive.py": "8dcbb593b46517ba982bec7603723259b9d0f7353793843936ac2725ae6f9f60",
+    "test_unclassified_setting_sensitivity.py": "6e435d2ad190b60f883eb65af109e8b25660e2d0dc68700d24b8b49180c7e30f",
     "validate_release.py": "36f319961bb7c265381f6d6a81248b7b3c28fe76a008018b81060a3131cbe394"
   },
   "repository_visibility": "public",
-  "local_update_date": "2026-10-13",
+  "local_update_date": "2026-10-15",
   "publication_state": {
-    "previous_release_commit": "68a6b504b0a2e6e2f9e334c907c86783d65c8c8c",
-    "release_update_date": "2026-10-12",
+    "previous_release_commit": "4cb0f41c1be6e07ac6f29746f868b5afa493500f",
+    "release_update_date": "2026-10-15",
     "included_additions": [
       "run_setting_reassignment_sensitivity.py",
       "test_setting_reassignment_sensitivity.py",
@@ -58,7 +59,8 @@
       "run_crude_adjusted_steps_comparison.py",
       "test_crude_adjusted_steps_comparison.py",
       "export_clinical_concepts.sql",
-      "test_clinical_concept_export.py"
+      "test_clinical_concept_export.py",
+      "test_unclassified_setting_sensitivity.py"
     ],
     "note": "Use the current repository commit to identify this source version. No participant data or fitted-result exports are included."
   }

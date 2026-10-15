@@ -56,7 +56,7 @@ non-lipid seeds and exact-match lipid definitions are in [RUNNING.md](RUNNING.md
 | Formal pooled pathway interactions and conditional sex/age contrasts | Same wrapper, pathways/moderation stages; not interchangeable with separately fitted sex models |
 | Pooled decomposition, score-construction robustness, case-only consistency, Steps spline, Figure 2 | `run_robustness_and_figure2.py` |
 | Separate female/male mediation fits (S2) | `run_sex_stratified_mediation.py` |
-| Unclassified-setting sensitivity (S7) | `run_unclassified_setting_sensitivity.py` |
+| Unclassified-setting and any-CVD recording analyses (S7) | `run_unclassified_setting_sensitivity.py`; four-group case characteristics, three-/four-category comparison and binary logistic models in the classified and full prepared cohorts |
 | Hypothetical allocation of missing settings (S14/main Fig 3) | `run_setting_reassignment_sensitivity.py`; 455 missing-setting cases allocated under fixed scenarios, with 148 Other/Unknown cases excluded |
 | S14/main Fig 3 typesetting | `build_setting_reassignment_si.py`; reads aggregate outputs and reports scenario-conditional sampling CIs |
 | Nonlinear age-adjustment sensitivity (S8) | `run_age_adjustment_sensitivity.py` |

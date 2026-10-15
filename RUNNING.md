@@ -166,7 +166,7 @@ python -B run_sleep_omission_sensitivity.py --bootstrap 2000 --workers 8 --outpu
 
 | Script | Prerequisites |
 | --- | --- |
-| Unclassified setting | Prepared 8,895-person cohort, `m1_standardization_parameters.csv`, `m1_primary_pairwise_results_python.csv` |
+| Unclassified setting and binary any-CVD recording | Prepared 8,895-person cohort, `m1_standardization_parameters.csv`, `m1_primary_pairwise_results_python.csv` |
 | Age adjustment | Prepared cohort, `manuscript_multinomial_pairwise_results.csv` (M1 rows), case-only results from step 2 |
 | Sleep omission | Completed pooled run with 51 nodes, 2,000 successful draws, all manifest-listed files, saved child seeds and primary draws |
 
@@ -181,6 +181,39 @@ guards: the alternative score uses matching participant resamples. The age
 script verifies reproduction of both linear-age reference fits before comparing
 age specifications. The four-category model tests a changed outcome model, not
 all possible acute/outpatient assignments of missing settings.
+
+S7 Panel A describes outpatient (N=2,127), acute-care (N=385), missing-setting
+(N=455) and Other/Unknown-setting (N=148) cases separately. It reports means
+and sample SDs, a Steps median with first and third quartiles, and categorical
+counts and percentages. The two SMD columns compare each unclassified subgroup
+with the pooled 2,512 classified cases; they are not missing-versus-outpatient
+or Other/Unknown-versus-acute comparisons. No descriptive hypothesis tests are
+performed, and the median row has no SMD. The outputs are
+`unclassified_setting_case_characteristics_by_setting.csv`,
+`unclassified_setting_classified_reference.csv`, and
+`unclassified_setting_descriptive_metadata.json`. Small-cell and complementary
+suppression applies to the affected counts, percentages and SMDs before the
+four-group descriptive table is written. These summaries describe observed
+groups; they do not establish why setting information is incomplete.
+
+The S7 script also fits two supplementary binary logistic models of any
+qualifying primary CVD recording versus no recorded CVD. The first uses the
+classified cohort (N=8,292; 2,512 cases and 5,780 participants without recorded
+CVD); the second uses the full prepared cohort (N=8,895; 3,115 cases and the
+same 5,780 participants without recorded CVD). All 603 unclassified cases,
+including 455 with missing setting and 148 with Other/Unknown setting, enter
+the second binary model as cases without an acute/outpatient assignment.
+Both models retain the original M1 Steps and age standardisation, linear age,
+sex at birth, recorded smoking status and categorical drinking frequency.
+
+The binary outputs are `any_cvd_binary_results.csv` (all coefficients),
+`any_cvd_binary_steps_comparison.csv` (the two Steps estimates), and
+`any_cvd_binary_metadata.json` (sample counts, scaling, fit diagnostics and
+run information). S7 Panel C and the aggregate report present the two ORs and
+Wald 95% CIs. These nested cohorts retain the same upstream eligibility rules;
+the binary models are not independent replications and do not test the
+acute-care versus outpatient contrast. No model coefficients are averaged
+across the multinomial outcomes to construct these estimates.
 
 ### 5a. Missing-setting allocation scenarios
 
