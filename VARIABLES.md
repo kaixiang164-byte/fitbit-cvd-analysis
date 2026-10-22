@@ -23,7 +23,7 @@ compatibility and are not clinical diagnoses unless explicitly stated.
   outcomes over `[t1, t0 + 36 months]`, a 24-month risk period.
 - The reported starting cohort of 10,365 already incorporates prior-CVD and
   diagnosis-status exclusions described below, together with
-  wearable, EHR, sleep-coverage, survey-completeness, recorded-smoking-status and drinking-frequency eligibility. Excluding
+  wearable, EHR, demographic-completeness, sleep-coverage, survey-completeness, recorded-smoking-status and drinking-frequency eligibility. Excluding
   1,470 participants with CVD during `[t0,t1)` leaves 8,895 exported participants.
 - The same classified cohort of 8,292 is used for primary association and exploratory mediation analyses:
   5,780 Control, 2,127 Outpatient, 385 Acute. A four-category sensitivity retains
@@ -54,8 +54,8 @@ compatibility and are not clinical diagnoses unless explicitly stated.
 | `Group` | `Control` or `Heart Disease`; the latter is a legacy label for qualifying CVD. |
 | `Onset_Type` | `N/A (Control)`, `Chronic (Office/Outpatient)`, `Acute (Hospital/ER)`, `Other/Unknown`, or missing setting for CVD cases. `Chronic` does not imply chronic rather than acute disease biology. |
 | `avg_steps` | Mean valid-day steps/day in the pre-t0 exposure window. |
-| `age` | Age in years at t0. |
-| `sex_at_birth` | `Female` or `Male`, as represented in the analyzed export. |
+| `age` | Completed years of age at t0, using the birth year, month and day extracted from `birth_datetime`: baseline year minus birth year, subtracting one if the baseline month/day precedes the birthday month/day. |
+| `sex_at_birth` | Recorded sex at birth; `Female` and `Male` were the only nonmissing categories in the source population. `Female` is the model reference. |
 | `is_smoker` | Recorded smoking status: 0 for never-smoker or non-smoker concepts; 1 for moderate, heavy, daily, occasional or unspecified smoker concepts. Code 0 is not restricted to lifetime never smokers; see the concept mapping below. |
 | `is_drinker` | Past-year drinking frequency from question concept 1586201: 0 for never or monthly or less; 1 for 2-4 times/month or 2-3 times/week; 2 for at least 4 times/week. These are grouped response categories, not alcohol-volume thresholds; see below. |
 | `has_sleep_disorder` | Study-defined low-sleep-efficiency indicator, not a clinical diagnosis or Fitbit Sleep Score; see below. |
@@ -66,6 +66,9 @@ compatibility and are not clinical diagnoses unless explicitly stated.
 | `has_hyperlipidemia` | Hyperlipidaemia recorded during that window, 0/1. |
 | `has_high_cholesterol` | High cholesterol recorded during that window, 0/1. |
 | `has_ckd` | Chronic kidney disease recorded during that window, 0/1. |
+
+Missing or NA age or sex-at-birth information excluded participants upstream,
+before the reported starting cohort of 10,365.
 
 Clinical flags describe records in the window, not necessarily incident disease.
 An absent record is not proof of disease absence. Recorded smoking status and
@@ -98,7 +101,9 @@ when an eligible record mapping to 0 or 1 is available; the most recent eligible
 pre-`t0` record supplies the indicator. Participants with no eligible record are
 excluded before the reported starting cohort of 10,365. The separate upstream
 exclusion of participants with explicit former-smoker/ex-smoker classifications
-also applies.
+also applies. The binary scheme has no separate former-smoker category;
+explicitly recorded former smokers are excluded rather than combined with
+either coded group.
 The unspecified `Smoker` concept is an affirmative smoking record, distinct from
 unknown smoking status. The reference category combines documented never-smoker
 and non-smoker concepts and is not a lifetime-never-smoking category. The daily
