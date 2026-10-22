@@ -19,7 +19,7 @@
     "README.md": "34096a90e133119c4e7f0efc79d91654a06de07627aa8fa51fa9d2196a12145e",
     "RUNNING.md": "d73c60c12c29db19696c1c62d4a306dcf13f965633e6f989506349364ec2b4ca",
     "VALIDATION.md": "a35390b619cf8a7e73d00face2aa700e0accae7d4bff8e7e9e0f0dc0fb644cae",
-    "VARIABLES.md": "808fed6694f28abd11e80fcf58091e73973801921b81c6f6c17696ecc8161b86",
+    "VARIABLES.md": "dce68cc28c945bca8fe09bd1f3be9cfece46ede7c247dbb64c3f3037b4d464aa",
     "build_setting_reassignment_si.py": "8fd3396ace4569849e22714fa96476d187d55030384f0e24c63d501fdaca8022",
     "export_clinical_concepts.sql": "e4f72a94172dec0322eeb96350dbbd413ad56b5638d3e01f847fa99b66017b5a",
     "prepare_age_reference.py": "e7bca9d372a598d03b3c2fea6f1c09656c99ee943f0eecd40424418aafe90cd0",
@@ -48,10 +48,10 @@
     "validate_release.py": "36f319961bb7c265381f6d6a81248b7b3c28fe76a008018b81060a3131cbe394"
   },
   "repository_visibility": "public",
-  "local_update_date": "2026-10-15",
+  "local_update_date": "2026-10-21",
   "publication_state": {
-    "previous_release_commit": "4cb0f41c1be6e07ac6f29746f868b5afa493500f",
-    "release_update_date": "2026-10-15",
+    "previous_release_commit": "ebe680c4989bdfdb280a1b2912dbc4bd908f955b",
+    "release_update_date": "2026-10-21",
     "included_additions": [
       "run_setting_reassignment_sensitivity.py",
       "test_setting_reassignment_sensitivity.py",
